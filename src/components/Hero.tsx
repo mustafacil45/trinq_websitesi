@@ -50,7 +50,7 @@ export default function Hero() {
             >
               <span className="block whitespace-nowrap">
                 <span className="font-extrabold text-white [text-shadow:0_0_24px_rgba(255,255,255,0.12)]">
-                  trinQ
+                  trinq
                 </span>{" "}
                 <span className="font-semibold text-white">İle Sevdiğin Yerlerde,</span>
               </span>
