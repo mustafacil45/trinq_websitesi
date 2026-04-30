@@ -17,7 +17,7 @@ const STEPS = [
   {
     icon: Gift,
     title: "Ayrıcalık: Sana Özel Tasarlanan Ödüller.",
-    desc: "AI analizimizle sadece senin sevdiğin ürünlerde anında ödüller kazan.",
+    desc: "Sana özel kampanyalar ve ödüllerle alışverişten anında fayda sağla.",
   },
 ];
 

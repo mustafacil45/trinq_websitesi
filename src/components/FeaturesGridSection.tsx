@@ -7,7 +7,7 @@ const FEATURES = [
   {
     icon: Smartphone,
     title: "Dijital Sadakat Sistemi",
-    desc: "Müşterileriniz, QR kod ile saniyeler içinde puan kazanır. Fiziksel kart kullanımına gerek kalmadan hızlı ve kesintisiz bir sadakat deneyimi sunarsınız.",
+    desc: "Müşterileriniz, QR kod ile saniyeler içinde işletmelerin yayınladığı kampanyalardan yararlanır. Fiziksel kart kullanımına gerek kalmadan hızlı ve kesintisiz bir sadakat deneyimi sunarsınız.",
   },
   {
     icon: LayoutDashboard,

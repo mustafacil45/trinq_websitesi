@@ -1,163 +1,136 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { Menu, X, Instagram, Facebook, Linkedin } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, Instagram, Linkedin } from "lucide-react";
 import Logo from "./Logo";
 import { useBusinessLeadModal } from "@/context/BusinessLeadModalContext";
 
-/** X (Twitter) markası — lucide generic X yerine marka şekli */
-function XLogo({ className, size = 20 }: { className?: string; size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      className={className}
-      aria-hidden
-      fill="currentColor"
-    >
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
-
 const SOCIAL_LINKS = [
-  { href: "https://instagram.com/trinq.app", label: "Instagram", Icon: Instagram },
-  { href: "https://facebook.com/trinq.app", label: "Facebook", Icon: Facebook },
-  { href: "https://linkedin.com/company/trinq", label: "LinkedIn", Icon: Linkedin },
-  { href: "https://x.com/trinq_app", label: "X", Icon: XLogo },
+  { href: "https://instagram.com/trinqapptr", label: "Instagram", Icon: Instagram },
+  { href: "https://www.linkedin.com/company/trinqapp/?viewAsMember=true", label: "LinkedIn", Icon: Linkedin },
 ] as const;
 
 const NAV_LINKS = [
-  { href: "#anasayfa", label: "ANASAYFA" },
-  { href: "#hakkimizda", label: "HAKKIMIZDA" },
-  { href: "#sistem", label: "SİSTEM NASIL ÇALIŞIR?" },
-  { href: "#isletmeler-icin", label: "İŞLETMELER İÇİN" },
-  { href: "#kullanicilar", label: "KULLANICILAR İÇİN" },
-  { href: "#isletmeler", label: "MAĞAZALAR" },
-];
+  { href: "/", label: "ANASAYFA" },
+  { href: "/#hakkimizda", label: "HAKKIMIZDA" },
+  { href: "/#ozellikler", label: "ÖZELLİKLER" },
+  { href: "/#iletisim", label: "İLETİŞİM" },
+] as const;
+
+/** Logo 96px kalır; satır daha alçak → logo üst/altta simetrik taşar (overflow-visible) */
+const HEADER_HEIGHT = "h-[80px]";
+
+function scrollMainNav(href: string, pathname: string, afterNavigate?: () => void) {
+  const m = href.match(/^\/#(.+)$/);
+  if (!m || pathname !== "/") return false;
+  const el = document.getElementById(m[1]);
+  if (!el) return false;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.history.replaceState(null, "", href);
+  afterNavigate?.();
+  return true;
+}
 
 export default function Header() {
   const { openBusinessLeadModal } = useBusinessLeadModal();
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const { scrollY } = useScroll();
-  const headerShadow = useTransform(
-    scrollY,
-    [0, 80],
-    ["0 1px 0 0 rgba(255,255,255,0.06)", "0 4px 24px -4px rgba(0,0,0,0.2)"]
-  );
 
-  useEffect(() => {
-    const ua = navigator.userAgent || "";
-    setIsMobile(/android|ipad|iphone|ipod/i.test(ua));
-  }, []);
+  const navLinkClass =
+    "inline-flex h-10 items-center justify-center leading-none text-xs font-semibold tracking-[0.06em] text-white transition-opacity duration-200 xl:text-[13px] " +
+    "hover:opacity-100 hover:underline hover:decoration-white/40 hover:underline-offset-4";
 
   return (
     <>
-      {/* Smart App Banner — sadece mobilde */}
-      <AnimatePresence>
-        {isMobile && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="fixed top-0 left-0 right-0 z-[60] overflow-hidden bg-gradient-to-r from-trinq-accent to-trinq-accent-light shadow-[0_2px_12px_rgba(0,0,0,0.18)]"
-          >
-            <div className="flex items-center justify-center gap-3 px-4 py-2">
-              <img src="/trinq-logo.png" alt="trinQ" className="h-6 w-6 rounded-md object-contain" />
-              <span className="text-xs font-semibold text-white">Uygulamamızı İndirin</span>
-              <a
-                href="#indir"
-                className="rounded-full bg-trinq-navy px-4 py-1 text-[10px] font-bold uppercase text-white transition hover:bg-trinq-navy-deep"
-              >
-                İNDİR
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <motion.header
-        className="fixed left-0 right-0 z-50 overflow-visible border-b border-white/10 bg-trinq-navy font-sans"
-        style={{ boxShadow: headerShadow, top: isMobile ? 36 : 0 }}
+        className="fixed left-0 right-0 z-50 w-full overflow-visible bg-trinq-navy font-sans text-white"
+        style={{ top: 0 }}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between overflow-visible px-4 sm:px-6 lg:pl-8 lg:pr-0 xl:pr-1">
-          <Link href="/" className="shrink-0 overflow-visible" aria-label="trinQ ana sayfa">
-            <Logo size="md" showText={true} variant="light" floatingInHeader />
-          </Link>
+        {/* Ortalanmış iç konteyner — max 1280px, yatay padding 24–40px */}
+        <div className="mx-auto w-full max-w-[1280px] overflow-visible px-6 md:px-8 xl:px-10">
+          {/* Mobil: logo + hamburger */}
+          <div className={`flex ${HEADER_HEIGHT} items-center justify-between lg:hidden`}>
+            <Link href="/" className="flex h-full min-w-0 shrink-0 items-center" aria-label="trinQ ana sayfa">
+              <Logo size="header" showText={true} variant="light" floatingInHeader />
+            </Link>
+            <button
+              type="button"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-white transition-opacity hover:opacity-90"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? "Menüyü kapat" : "Menüyü aç"}
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
+            </button>
+          </div>
 
-          <nav
-            className="order-3 hidden w-full min-w-0 justify-center lg:order-none lg:flex lg:w-auto lg:flex-1 lg:justify-center"
-            aria-label="Ana menü"
+          {/* Masaüstü: CSS Grid auto 1fr auto — gap ile iç boşluklar */}
+          <div
+            className={`hidden min-h-0 w-full grid-cols-[auto_1fr_auto] items-stretch gap-0 lg:grid ${HEADER_HEIGHT}`}
           >
-            <div className="flex max-w-full flex-nowrap items-center justify-center gap-x-2.5 overflow-x-auto whitespace-nowrap font-[family-name:var(--font-inter)] [scrollbar-width:none] [-ms-overflow-style:none] sm:gap-x-3 lg:gap-x-3.5 xl:gap-x-4 [&::-webkit-scrollbar]:hidden">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="shrink-0 text-[11px] font-semibold leading-none text-white/93 antialiased transition-colors hover:text-white lg:text-[12px] xl:text-[13px]"
-                  style={{ letterSpacing: "0.05em" }}
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <div className="flex min-h-0 items-center justify-self-start">
+              <Link href="/" className="flex items-center" aria-label="trinQ ana sayfa">
+                <Logo size="header" showText={true} variant="light" floatingInHeader />
+              </Link>
             </div>
-          </nav>
 
-          <div className="hidden shrink-0 items-center justify-end gap-4 lg:ml-2 lg:flex xl:ml-4">
-            <div className="flex items-center gap-3 sm:gap-3.5">
+            <nav
+              className="flex min-h-0 items-center justify-center justify-self-center"
+              aria-label="Ana menü"
+            >
+              <ul className="flex items-center justify-center gap-6 xl:gap-8">
+                {NAV_LINKS.map((link) => (
+                  <li key={link.href} className="flex items-center">
+                    <Link
+                      href={link.href}
+                      className={`whitespace-nowrap opacity-95 ${navLinkClass}`}
+                      onClick={(e) => {
+                        if (scrollMainNav(link.href, pathname)) e.preventDefault();
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            <div className="flex min-h-0 items-center justify-end justify-self-end gap-4 xl:gap-6">
               {SOCIAL_LINKS.map(({ href, label, Icon }) => (
                 <Link
                   key={label}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/80 transition-colors hover:text-white"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-white/85 transition-opacity hover:opacity-100"
                   aria-label={label}
                 >
-                  <Icon size={20} className="transition-transform duration-300 hover:scale-110" />
+                  <Icon size={20} strokeWidth={1.5} />
                 </Link>
               ))}
-            </div>
-            <div className="flex items-center gap-3 xl:gap-4">
               <Link
-                href="/panel-giris"
-                className="shrink-0 text-[11px] font-semibold text-white/90 antialiased transition-colors hover:text-white lg:text-xs xl:text-[13px]"
+                href="https://kampanyapaneli.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-10 shrink-0 items-center whitespace-nowrap text-xs font-semibold leading-none tracking-wide text-white opacity-95 transition-opacity hover:opacity-100 xl:text-[13px]"
               >
                 İşletme Girişi
               </Link>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              <button
+                type="button"
+                onClick={openBusinessLeadModal}
+                className="inline-flex h-10 shrink-0 items-center rounded-full bg-black px-5 text-[11px] font-bold leading-none tracking-wide text-white ring-1 ring-white/10 transition-colors duration-200 hover:bg-neutral-900 lg:px-6 lg:text-sm"
               >
-                <motion.button
-                  type="button"
-                  onClick={openBusinessLeadModal}
-                  className="inline-block rounded-full bg-trinq-accent px-5 py-2.5 text-[11px] font-bold text-white shadow-md transition-all hover:bg-trinq-accent-hover hover:shadow-lg lg:px-6 lg:text-sm"
-                  style={{ letterSpacing: "0.02em" }}
-                >
-                  İşletme Ol
-                </motion.button>
-              </motion.div>
+                İşletme Ol
+              </button>
             </div>
           </div>
-
-          <button
-            type="button"
-            className="rounded-lg p-2 text-white lg:hidden"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? "Menüyü kapat" : "Menüyü aç"}
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
 
         <AnimatePresence>
@@ -167,48 +140,53 @@ export default function Header() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
-              className="overflow-hidden border-t border-white/10 bg-trinq-navy lg:hidden"
+              className="overflow-hidden bg-trinq-navy lg:hidden"
             >
-              <nav className="flex flex-col gap-1 px-4 py-4 font-[family-name:var(--font-inter)]" aria-label="Mobil menü">
+              <nav className="mx-auto flex max-w-[1280px] flex-col gap-1 px-6 pb-4 pt-2 md:px-8 xl:px-10" aria-label="Mobil menü">
                 {NAV_LINKS.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="rounded-xl py-3 px-4 text-sm font-semibold text-white/92 antialiased transition hover:bg-white/10 hover:text-white"
-                    style={{ letterSpacing: "0.04em" }}
-                    onClick={() => setMobileOpen(false)}
+                    className="rounded-lg px-2 py-3 text-sm font-semibold tracking-[0.04em] text-white/95 transition-opacity hover:opacity-100"
+                    onClick={(e) => {
+                      if (scrollMainNav(link.href, pathname, () => setMobileOpen(false))) {
+                        e.preventDefault();
+                      } else {
+                        setMobileOpen(false);
+                      }
+                    }}
                   >
                     {link.label}
                   </Link>
                 ))}
-                <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4 px-2">
-                  <div className="flex flex-wrap items-center justify-center gap-4 rounded-xl bg-white/5 py-3 px-2">
+                <div className="mt-3 flex flex-col gap-3 border-t border-[rgba(255,255,255,0.08)] pt-4">
+                  <div className="flex items-center gap-4 xl:gap-5">
                     {SOCIAL_LINKS.map(({ href, label, Icon }) => (
                       <Link
                         key={label}
                         href={href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-white/85 transition hover:text-white"
+                        className="flex h-10 w-10 items-center justify-center rounded-lg text-white/85 transition-opacity hover:opacity-100"
                         aria-label={label}
                         onClick={() => setMobileOpen(false)}
                       >
-                        <Icon size={22} className="transition-opacity hover:opacity-100" />
+                        <Icon size={22} strokeWidth={1.5} />
                       </Link>
                     ))}
                   </div>
                   <Link
-                    href="/panel-giris"
-                    className="block rounded-xl py-3 text-center text-[13px] font-semibold text-white/92 transition hover:bg-white/10 hover:text-white"
-                    style={{ letterSpacing: "0.02em" }}
+                    href="https://kampanyapaneli.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-2 text-[13px] font-semibold tracking-wide text-white transition-opacity hover:opacity-100"
                     onClick={() => setMobileOpen(false)}
                   >
                     İşletme Girişi
                   </Link>
                   <button
                     type="button"
-                    className="block w-full rounded-full bg-trinq-accent py-2.5 text-center text-[13px] font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:bg-trinq-accent-hover"
-                    style={{ letterSpacing: "0.02em" }}
+                    className="w-full rounded-full bg-black py-3 text-[13px] font-bold tracking-wide text-white ring-1 ring-white/10 transition-colors hover:bg-neutral-900"
                     onClick={() => {
                       openBusinessLeadModal();
                       setMobileOpen(false);

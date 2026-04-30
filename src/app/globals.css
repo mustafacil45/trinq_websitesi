@@ -59,6 +59,8 @@ html {
 /* Anchor linkler fixed header altında kalmasın */
 #anasayfa,
 #hakkimizda,
+#ozellikler,
+#iletisim,
 #sistem,
 #uygulama-vitrini,
 #dijital-devrim,
@@ -69,13 +71,15 @@ html {
 #sss,
 #indir,
 #giris {
-  scroll-margin-top: 5.5rem;
+  scroll-margin-top: 9rem;
 }
 
 @media (min-width: 1024px) {
 
   #anasayfa,
   #hakkimizda,
+  #ozellikler,
+  #iletisim,
   #sistem,
   #uygulama-vitrini,
   #dijital-devrim,
@@ -86,7 +90,7 @@ html {
   #sss,
   #indir,
   #giris {
-    scroll-margin-top: 6rem;
+    scroll-margin-top: 7rem;
   }
 }
 

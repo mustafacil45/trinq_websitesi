@@ -87,7 +87,7 @@ model BusinessLead {
   businessAddress String
   fullName        String
   title           String
-  phone           String
+  phone           String?
   email           String
   message         String
   createdAt       DateTime @default(now())

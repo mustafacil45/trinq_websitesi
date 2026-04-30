@@ -13,6 +13,11 @@ export default function Hero() {
   const { openBusinessLeadModal } = useBusinessLeadModal();
   const [index, setIndex] = useState(0);
 
+  const handleStoreClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.alert("Yakında çıkıyoruz!");
+  };
+
   useEffect(() => {
     const id = setInterval(() => {
       setIndex((i) => (i + 1) % ROTATING_WORDS.length);
@@ -23,7 +28,7 @@ export default function Hero() {
   return (
     <>
       <section
-        className="relative min-h-[90vh] overflow-hidden pt-28 sm:min-h-[85vh] sm:pt-32 lg:pt-36"
+        className="relative min-h-[90vh] overflow-hidden pt-36 sm:min-h-[85vh] sm:pt-36 lg:pt-40"
         id="anasayfa"
         style={{
           background:
@@ -35,7 +40,7 @@ export default function Hero() {
         <div className="pointer-events-none absolute right-1/4 top-1/2 h-64 w-64 rounded-full bg-trinq-accent-light/12 blur-[100px] transform-gpu will-change-transform" />
         <div className="pointer-events-none absolute bottom-0 left-0 h-72 w-96 rounded-full bg-trinq-navy/30 blur-[100px] transform-gpu will-change-transform" />
 
-        <div className="relative mx-auto flex min-h-[calc(90vh-6rem)] max-w-7xl flex-col items-center justify-center px-4 sm:px-6 lg:min-h-[calc(85vh-6rem)] lg:flex-row lg:gap-12 lg:px-8">
+        <div className="relative mx-auto flex min-h-[calc(90vh-7rem)] max-w-7xl flex-col items-center justify-center px-4 sm:px-6 lg:min-h-[calc(85vh-7rem)] lg:flex-row lg:gap-12 lg:px-8">
           {/* Sol: Metin hiyerarşisi */}
           <div className="relative z-10 flex max-w-2xl flex-col items-center text-center font-sans lg:items-start lg:text-left">
             <motion.h1
@@ -50,7 +55,7 @@ export default function Hero() {
             >
               <span className="block whitespace-nowrap">
                 <span className="font-extrabold text-white [text-shadow:0_0_24px_rgba(255,255,255,0.12)]">
-                  trinq
+                  trinQ
                 </span>{" "}
                 <span className="font-semibold text-white">İle Sevdiğin Yerlerde,</span>
               </span>
@@ -97,6 +102,7 @@ export default function Hero() {
                 href={APP_STORE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={handleStoreClick}
                 className="inline-flex shrink-0 justify-center transition hover:opacity-95 sm:justify-start"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -114,6 +120,7 @@ export default function Hero() {
                 href={PLAY_STORE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={handleStoreClick}
                 className="inline-flex shrink-0 justify-center transition hover:opacity-95 sm:justify-start"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}

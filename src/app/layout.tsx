@@ -3,7 +3,6 @@ import { Plus_Jakarta_Sans, Geist_Mono, Inter, Instrument_Serif } from "next/fon
 import "./globals.css";
 import PageWrapper from "@/components/PageWrapper";
 import CookieBanner from "@/components/CookieBanner";
-import WhatsAppButton from "@/components/WhatsAppButton";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-heading",
@@ -46,7 +45,6 @@ export default function RootLayout({
       >
         <PageWrapper>{children}</PageWrapper>
         <CookieBanner />
-        <WhatsAppButton />
       </body>
     </html>
   );

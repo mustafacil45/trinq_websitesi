@@ -24,13 +24,12 @@ export default function CTASection() {
 
   const handleDownload = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (device === "ios") {
-      window.location.href = APP_STORE_URL;
-    } else if (device === "android") {
-      window.location.href = PLAY_STORE_URL;
-    } else {
-      setShowQrModal(true);
-    }
+    window.alert("Yakında çıkıyoruz!");
+  };
+
+  const handleStoreClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.alert("Yakında çıkıyoruz!");
   };
 
   return (
@@ -49,7 +48,7 @@ export default function CTASection() {
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.55, ease: easing }}
         >
-          trinQ’yi Hemen İndir
+          trinQ&apos;i Hemen İndir
         </motion.h2>
         <motion.p
           className="mx-auto mt-4 max-w-xl text-lg text-white/90"
@@ -98,6 +97,7 @@ export default function CTASection() {
               href={APP_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleStoreClick}
               className="inline-flex transition hover:opacity-95"
             >
               <img
@@ -112,6 +112,7 @@ export default function CTASection() {
               href={PLAY_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleStoreClick}
               className="inline-flex transition hover:opacity-95"
             >
               <img

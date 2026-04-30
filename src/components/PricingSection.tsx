@@ -83,7 +83,7 @@ export default function PricingSection() {
                 </p>
               </div>
               <motion.a
-                href="#iletisim"
+                href="/#iletisim"
                 className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-trinq-accent px-6 py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-trinq-accent-hover"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -91,7 +91,7 @@ export default function PricingSection() {
                 14 Gün Ücretsiz Başlayın <ArrowRight size={16} />
               </motion.a>
               <motion.a
-                href="#iletisim"
+                href="/#iletisim"
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/5"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}

@@ -2,16 +2,19 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Instagram, Linkedin, Mail, MapPin } from "lucide-react";
 import Logo from "./Logo";
 
+/** Header ile uyumlu sıra; sayfa üzerinde yukarıdan aşağı akış */
 const QUICK_LINKS = [
-  { href: "#anasayfa", label: "Anasayfa" },
-  { href: "#hakkimizda", label: "Hakkımızda" },
-  { href: "#sistem", label: "Nasıl Çalışır?" },
-  { href: "#isletmeler-icin", label: "İşletmeler İçin" },
-  { href: "#isletmeler", label: "Mağazalar" },
-  { href: "#sss", label: "S.S.S" },
+  { href: "/", label: "Anasayfa" },
+  { href: "/#hakkimizda", label: "Hakkımızda" },
+  { href: "/#ozellikler", label: "Özellikler" },
+  { href: "/#sistem", label: "Nasıl Çalışır?" },
+  { href: "/#isletmeler-icin", label: "İşletmeler İçin" },
+  { href: "/#isletmeler", label: "Mağazalar" },
+  { href: "/#iletisim", label: "İletişim" },
+  { href: "/#sss", label: "S.S.S." },
 ];
 
 const LEGAL_LINKS = [
@@ -22,10 +25,8 @@ const LEGAL_LINKS = [
 ];
 
 const SOCIAL = [
-  { href: "https://instagram.com/trinq.app", icon: Instagram, label: "Instagram" },
-  { href: "#", icon: Facebook, label: "Facebook" },
-  { href: "#", icon: Twitter, label: "X (Twitter)" },
-  { href: "#", icon: Linkedin, label: "LinkedIn" },
+  { href: "https://instagram.com/trinqapptr", icon: Instagram, label: "Instagram" },
+  { href: "https://www.linkedin.com/company/trinqapp/?viewAsMember=true", icon: Linkedin, label: "LinkedIn" },
 ];
 
 export default function Footer() {
@@ -46,8 +47,7 @@ export default function Footer() {
               <Logo size="sm" showText={true} variant="light" />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
-              Dijital fiş ve sadakat platformu. Fişlerini topla, damga kazan,
-              ödüllerini al. İşletmenizi dijitale taşıyın.
+              Sadakat platformu. Fişlerini topla, damga kazan, ödüllerini al. İşletmenizi dijitale taşıyın.
             </p>
             {/* Sosyal medya */}
             <div className="mt-6 flex items-center gap-4">
@@ -116,20 +116,11 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:info@trinq.app"
+                  href="mailto:info@trinqapp.com"
                   className="flex items-center gap-3 text-sm text-white/60 transition hover:text-white"
                 >
                   <Mail size={16} className="shrink-0 text-white/50" />
-                  info@trinq.app
-                </a>
-              </li>
-              <li>
-                <a
-                  href="tel:+905551234567"
-                  className="flex items-center gap-3 text-sm text-white/60 transition hover:text-white"
-                >
-                  <Phone size={16} className="shrink-0 text-white/50" />
-                  +90 555 123 45 67
+                  info@trinqapp.com
                 </a>
               </li>
             </ul>

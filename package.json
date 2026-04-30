@@ -15,6 +15,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.3",
     "@react-google-maps/api": "^2.20.8",
+    "@sendgrid/mail": "^8.1.6",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.4.2",
     "framer-motion": "^12.36.0",

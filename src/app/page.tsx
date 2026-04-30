@@ -1,17 +1,15 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import FeaturesGridSection from "@/components/FeaturesGridSection";
 import AppShowcaseSection from "@/components/AppShowcaseSection";
 import UsersSection from "@/components/UsersSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
-import DigitalRevolutionSection from "@/components/DigitalRevolutionSection";
-import FeaturesGridSection from "@/components/FeaturesGridSection";
 import SectorsSection from "@/components/SectorsSection";
 import BusinessSection from "@/components/BusinessSection";
-import AboutSection from "@/components/AboutSection";
 import PricingSection from "@/components/PricingSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
-import ContactSection from "@/components/ContactSection";
 import FAQSection from "@/components/FAQSection";
+import ContactSection from "@/components/ContactSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import MainWithReveal from "@/components/MainWithReveal";
@@ -21,24 +19,20 @@ export default function Home() {
     <>
       <Header />
       <MainWithReveal>
-        {/* === KULLANICILAR === */}
+        {/* #hakkimizda: yalnızca menü hedefi (ayrı “hakkımızda” içerik bloğu yok) */}
         <Hero />
-        <AppShowcaseSection />
-        <UsersSection />
-        <HowItWorksSection />
-        <DigitalRevolutionSection />
-
-        {/* === İŞLETMELER === */}
+        <div id="hakkimizda" className="h-px w-full" aria-hidden />
         <FeaturesGridSection />
+        <AppShowcaseSection />
+        <HowItWorksSection />
+        <UsersSection />
+        {/* <DigitalRevolutionSection /> */}
         <SectorsSection />
         <BusinessSection />
-        <AboutSection />
         <PricingSection />
         <TestimonialsSection />
-
-        {/* === ORTAK === */}
-        <ContactSection />
         <FAQSection />
+        <ContactSection />
         <CTASection />
         <Footer />
       </MainWithReveal>

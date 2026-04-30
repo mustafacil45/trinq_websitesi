@@ -58,7 +58,6 @@ export default function BusinessLeadModal({ open, onClose }: Props) {
       businessAddress: String(fd.get("businessAddress") ?? "").trim(),
       fullName: String(fd.get("fullName") ?? "").trim(),
       title: String(fd.get("title") ?? "").trim(),
-      phone: String(fd.get("phone") ?? "").trim(),
       email: String(fd.get("email") ?? "").trim(),
       message: String(fd.get("message") ?? "").trim(),
     };
@@ -188,18 +187,6 @@ export default function BusinessLeadModal({ open, onClose }: Props) {
                       placeholder="Örn: Genel Müdür"
                       className={inputClass}
                       autoComplete="organization-title"
-                    />
-                  </Field>
-                  <Field label="Telefon" htmlFor="bl-phone">
-                    <input
-                      id="bl-phone"
-                      name="phone"
-                      required
-                      inputMode="tel"
-                      maxLength={20}
-                      placeholder="05xx xxx xx xx"
-                      className={inputClass}
-                      autoComplete="tel"
                     />
                   </Field>
                   <Field label="Mail" htmlFor="bl-email">
