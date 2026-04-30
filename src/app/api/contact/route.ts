@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import sgMail from "@sendgrid/mail";
 import { z } from "zod";
 
+/** SendGrid Node SDK; Edge’de çalışmaz */
+export const runtime = "nodejs";
+
 const bodySchema = z.object({
   fullName: z.string().trim().min(1).max(120),
   email: z.string().trim().email().max(120),
@@ -52,23 +55,46 @@ function getClientIp(req: Request) {
   return req.headers.get("x-real-ip") || "unknown";
 }
 
+/** Host başlığından portu at (örn. :443) */
+function hostOnly(host: string | null): string | null {
+  if (!host) return null;
+  return host.split(":")[0].toLowerCase();
+}
+
+/** example.com ile www.example.com aynı site sayılır (canlıda 403/500 karışmasın) */
+function hostsMatch(a: string, b: string): boolean {
+  if (a === b) return true;
+  const strip = (h: string) => h.replace(/^www\./, "");
+  return strip(a) === strip(b);
+}
+
 function sameOriginAllowed(req: Request) {
   const origin = req.headers.get("origin");
   if (!origin) return true;
-  const host = req.headers.get("host");
-  if (!host) return false;
-  return origin === `https://${host}` || origin === `http://${host}`;
+  const requestHost = hostOnly(req.headers.get("host"));
+  if (!requestHost) return false;
+  try {
+    const originHost = hostOnly(new URL(origin).hostname);
+    if (!originHost) return false;
+    return hostsMatch(originHost, requestHost);
+  } catch {
+    return false;
+  }
 }
 
 function corsHeaders(req: Request) {
   const origin = req.headers.get("origin");
-  const host = req.headers.get("host");
-  const allowOrigin =
-    origin && host && (origin === `https://${host}` || origin === `http://${host}`) ? origin : "";
+  const requestHost = hostOnly(req.headers.get("host"));
   const headers = new Headers();
-  if (!allowOrigin) return headers;
+  if (!origin || !requestHost) return headers;
+  try {
+    const originHost = hostOnly(new URL(origin).hostname);
+    if (!originHost || !hostsMatch(originHost, requestHost)) return headers;
+  } catch {
+    return headers;
+  }
 
-  headers.set("Access-Control-Allow-Origin", allowOrigin);
+  headers.set("Access-Control-Allow-Origin", origin);
   headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
   headers.set("Access-Control-Allow-Headers", "Content-Type");
   headers.set("Vary", "Origin");
@@ -127,12 +153,17 @@ export async function POST(req: Request) {
     );
   }
 
-  const sendGridKey = process.env.SENDGRID_API_KEY;
-  const to = process.env.CONTACT_RECEIVER_EMAIL;
-  const from = process.env.CONTACT_SENDER_EMAIL;
+  const sendGridKey = process.env.SENDGRID_API_KEY?.trim();
+  const to = process.env.CONTACT_RECEIVER_EMAIL?.trim();
+  const from = process.env.CONTACT_SENDER_EMAIL?.trim();
 
   if (!sendGridKey || !to || !from) {
-    console.error("[contact] Missing SENDGRID_API_KEY, CONTACT_RECEIVER_EMAIL, or CONTACT_SENDER_EMAIL");
+    const missing = [
+      !sendGridKey && "SENDGRID_API_KEY",
+      !to && "CONTACT_RECEIVER_EMAIL",
+      !from && "CONTACT_SENDER_EMAIL",
+    ].filter(Boolean);
+    console.error("[contact] Missing env (Production’da Vercel → Settings → Environment Variables):", missing.join(", "));
     return NextResponse.json(
       { error: "Mesaj gönderilirken bir sorun oluştu. Lütfen tekrar deneyin." },
       { status: 500, headers: corsHeaders(req) }
@@ -175,8 +206,13 @@ export async function POST(req: Request) {
       text,
       html,
     });
-  } catch (err) {
-    console.error("SENDGRID MAIL ERROR:", err);
+  } catch (err: unknown) {
+    const sg = err as { response?: { body?: unknown }; message?: string };
+    console.error(
+      "[contact] SendGrid:",
+      JSON.stringify(sg?.response?.body ?? null),
+      sg?.message ?? err
+    );
     return NextResponse.json(
       { error: "Mesaj gönderilirken bir sorun oluştu. Lütfen tekrar deneyin." },
       { status: 500, headers: corsHeaders(req) }
