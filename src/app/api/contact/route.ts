@@ -5,6 +5,9 @@ import { z } from "zod";
 /** SendGrid Node SDK; Edge’de çalışmaz */
 export const runtime = "nodejs";
 
+/** Vercel / proxy arkasında Host ile ziyaret edilen alan adı farklı olabiliyor */
+export const dynamic = "force-dynamic";
+
 const bodySchema = z.object({
   fullName: z.string().trim().min(1).max(120),
   email: z.string().trim().email().max(120),
@@ -61,6 +64,16 @@ function hostOnly(host: string | null): string | null {
   return host.split(":")[0].toLowerCase();
 }
 
+/** Önce X-Forwarded-Host (virgülle çoklu gelebilir), yoksa Host */
+function effectiveRequestHost(req: Request): string | null {
+  const xf = req.headers.get("x-forwarded-host");
+  if (xf) {
+    const first = xf.split(",")[0]?.trim();
+    if (first) return hostOnly(first);
+  }
+  return hostOnly(req.headers.get("host"));
+}
+
 /** example.com ile www.example.com aynı site sayılır (canlıda 403/500 karışmasın) */
 function hostsMatch(a: string, b: string): boolean {
   if (a === b) return true;
@@ -71,7 +84,7 @@ function hostsMatch(a: string, b: string): boolean {
 function sameOriginAllowed(req: Request) {
   const origin = req.headers.get("origin");
   if (!origin) return true;
-  const requestHost = hostOnly(req.headers.get("host"));
+  const requestHost = effectiveRequestHost(req);
   if (!requestHost) return false;
   try {
     const originHost = hostOnly(new URL(origin).hostname);
@@ -84,7 +97,7 @@ function sameOriginAllowed(req: Request) {
 
 function corsHeaders(req: Request) {
   const origin = req.headers.get("origin");
-  const requestHost = hostOnly(req.headers.get("host"));
+  const requestHost = effectiveRequestHost(req);
   const headers = new Headers();
   if (!origin || !requestHost) return headers;
   try {
@@ -107,6 +120,20 @@ export async function OPTIONS(req: Request) {
 
 export async function POST(req: Request) {
   if (!sameOriginAllowed(req)) {
+    const origin = req.headers.get("origin");
+    let originHost = "";
+    try {
+      originHost = origin ? hostOnly(new URL(origin).hostname) ?? "" : "";
+    } catch {
+      originHost = "";
+    }
+    console.error("[contact] Origin rejected:", {
+      origin,
+      originHost,
+      effectiveHost: effectiveRequestHost(req),
+      rawHost: req.headers.get("host"),
+      xForwardedHost: req.headers.get("x-forwarded-host"),
+    });
     return NextResponse.json({ error: "Yetkisiz istek." }, { status: 403, headers: corsHeaders(req) });
   }
 
@@ -154,13 +181,19 @@ export async function POST(req: Request) {
   }
 
   const sendGridKey = process.env.SENDGRID_API_KEY?.trim();
-  const to = process.env.CONTACT_RECEIVER_EMAIL?.trim();
+  const toRaw = process.env.CONTACT_RECEIVER_EMAIL?.trim();
+  const toList = toRaw
+    ? toRaw
+        .split(",")
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0)
+    : [];
   const from = process.env.CONTACT_SENDER_EMAIL?.trim();
 
-  if (!sendGridKey || !to || !from) {
+  if (!sendGridKey || toList.length === 0 || !from) {
     const missing = [
       !sendGridKey && "SENDGRID_API_KEY",
-      !to && "CONTACT_RECEIVER_EMAIL",
+      toList.length === 0 && "CONTACT_RECEIVER_EMAIL",
       !from && "CONTACT_SENDER_EMAIL",
     ].filter(Boolean);
     console.error("[contact] Missing env (Production’da Vercel → Settings → Environment Variables):", missing.join(", "));
@@ -199,7 +232,7 @@ export async function POST(req: Request) {
     sgMail.setApiKey(sendGridKey);
 
     await sgMail.send({
-      to,
+      to: toList.length === 1 ? toList[0] : toList,
       from,
       replyTo: safe.email,
       subject: "Yeni TrinQ İletişim Formu Mesajı",
