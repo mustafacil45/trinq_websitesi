@@ -114,11 +114,28 @@ function corsHeaders(req: Request) {
   return headers;
 }
 
+function mergeHeaders(base: Headers, extra: Record<string, string>) {
+  const h = new Headers(base);
+  for (const [k, v] of Object.entries(extra)) {
+    h.set(k, v);
+  }
+  return h;
+}
+
+/** SendGrid / bazı hata gövdeleri stringify edilemeyebilir; log satırını asla patlatma */
+function safeStringify(value: unknown): string {
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return String(value);
+  }
+}
+
 export async function OPTIONS(req: Request) {
   return new NextResponse(null, { status: 204, headers: corsHeaders(req) });
 }
 
-export async function POST(req: Request) {
+async function handleContactPost(req: Request) {
   if (!sameOriginAllowed(req)) {
     const origin = req.headers.get("origin");
     let originHost = "";
@@ -199,7 +216,7 @@ export async function POST(req: Request) {
     console.error("[contact] Missing env (Production’da Vercel → Settings → Environment Variables):", missing.join(", "));
     return NextResponse.json(
       { error: "Mesaj gönderilirken bir sorun oluştu. Lütfen tekrar deneyin." },
-      { status: 500, headers: corsHeaders(req) }
+      { status: 500, headers: mergeHeaders(corsHeaders(req), { "X-Contact-Reason": "missing_env" }) }
     );
   }
 
@@ -241,16 +258,24 @@ export async function POST(req: Request) {
     });
   } catch (err: unknown) {
     const sg = err as { response?: { body?: unknown }; message?: string };
-    console.error(
-      "[contact] SendGrid:",
-      JSON.stringify(sg?.response?.body ?? null),
-      sg?.message ?? err
-    );
+    console.error("[contact] SendGrid:", safeStringify(sg?.response?.body ?? null), sg?.message ?? err);
     return NextResponse.json(
       { error: "Mesaj gönderilirken bir sorun oluştu. Lütfen tekrar deneyin." },
-      { status: 500, headers: corsHeaders(req) }
+      { status: 500, headers: mergeHeaders(corsHeaders(req), { "X-Contact-Reason": "sendgrid" }) }
     );
   }
 
   return NextResponse.json({ ok: true, success: true }, { headers: corsHeaders(req) });
+}
+
+export async function POST(req: Request) {
+  try {
+    return await handleContactPost(req);
+  } catch (err) {
+    console.error("[contact] Unhandled:", err);
+    return NextResponse.json(
+      { error: "Mesaj gönderilirken bir sorun oluştu. Lütfen tekrar deneyin." },
+      { status: 500, headers: mergeHeaders(corsHeaders(req), { "X-Contact-Reason": "unhandled" }) }
+    );
+  }
 }

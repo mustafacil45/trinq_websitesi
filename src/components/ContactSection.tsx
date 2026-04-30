@@ -70,7 +70,19 @@ export default function ContactSection() {
         }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
-      if (!res.ok) throw new Error(data.error || "Mesaj gönderilirken bir sorun oluştu. Lütfen tekrar deneyin.");
+      if (!res.ok) {
+        const reason = res.headers.get("X-Contact-Reason");
+        if (reason === "missing_env") {
+          throw new Error(
+            "Mesaj şu an sistem üzerinden iletilemiyor. Lütfen doğrudan info@trinqapp.com adresine yazın."
+          );
+        }
+        const base = data.error || "Mesaj gönderilirken bir sorun oluştu. Lütfen tekrar deneyin.";
+        if (reason === "sendgrid") {
+          throw new Error(`${base} Sorun sürerse info@trinqapp.com ile iletişime geçebilirsiniz.`);
+        }
+        throw new Error(base);
+      }
 
       setStatus({
         type: "success",
