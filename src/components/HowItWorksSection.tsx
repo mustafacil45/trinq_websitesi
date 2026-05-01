@@ -40,7 +40,7 @@ const item = {
 
 export default function HowItWorksSection() {
   return (
-    <section className="relative bg-[color:var(--background)] py-20 sm:py-24 lg:py-28" id="sistem">
+    <section className="relative bg-white py-14 sm:py-20 lg:py-28" id="sistem">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center"
@@ -49,16 +49,16 @@ export default function HowItWorksSection() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <h2 className="text-3xl font-semibold tracking-tight text-trinq-navy sm:text-4xl" style={{ letterSpacing: "-0.02em" }}>
+          <h2 className="text-3xl font-semibold leading-tight tracking-tight text-trinq-navy sm:text-4xl" style={{ letterSpacing: "-0.02em" }}>
             trinQ Ayrıcalığına 3 Adımda Katıl
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-[#1E293B]/90" style={{ lineHeight: 1.6 }}>
+          <p className="mx-auto mt-4 max-w-2xl text-base text-[#1E293B]/90 sm:text-lg" style={{ lineHeight: 1.6 }}>
             Üç adımda dijital sadakat: tek okutma, görünmez aktarım, sana özel ödüller.
           </p>
         </motion.div>
 
         <motion.div
-          className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-3 md:items-stretch"
+          className="mt-10 grid grid-cols-1 gap-5 sm:mt-16 md:grid-cols-3 md:items-stretch lg:gap-10"
           variants={container}
           initial="hidden"
           whileInView="show"
@@ -72,7 +72,7 @@ export default function HowItWorksSection() {
             >
               {/* Glassmorphism kart: aynı genişlik/yükseklik — grid sütunları eşit */}
               <motion.div
-                className="relative flex h-full min-h-[300px] w-full flex-col rounded-[24px] border border-white/60 bg-white/70 p-8 shadow-[0_8px_32px_-8px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:min-h-[320px]"
+                className="relative flex h-full min-h-[240px] w-full flex-col rounded-[24px] border border-white/60 bg-white/70 p-6 shadow-[0_8px_32px_-8px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:min-h-[320px] sm:p-8"
                 style={{ boxShadow: "0 8px 32px -8px rgba(15,23,42,0.08), 0 0 0 0.5px rgba(255,255,255,0.8)" }}
                 whileHover={{ y: -4, boxShadow: "0 20px 48px -12px rgba(15,23,42,0.12), 0 0 0 0.5px rgba(255,255,255,0.9)" }}
                 transition={{ type: "spring", stiffness: 300, damping: 24 }}

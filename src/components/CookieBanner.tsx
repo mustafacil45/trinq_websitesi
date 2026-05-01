@@ -35,7 +35,7 @@ export default function CookieBanner() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 50, opacity: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="fixed bottom-4 left-4 z-[100] max-w-sm rounded-2xl border border-white/15 bg-trinq-navy/95 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:bottom-6 sm:left-6"
+          className="fixed inset-x-4 bottom-4 z-[100] rounded-2xl border border-white/15 bg-trinq-navy/95 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:bottom-6 sm:left-6 sm:right-auto sm:max-w-sm sm:p-6"
         >
           <div className="mb-5">
             <h3 className="mb-1.5 text-[15px] font-bold text-white">Çerez Tercihleri</h3>
@@ -46,13 +46,13 @@ export default function CookieBanner() {
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             <button
               onClick={handleAccept}
-              className="flex-1 whitespace-nowrap rounded-lg bg-trinq-accent px-4 py-2.5 text-[13px] font-bold text-white transition-all hover:bg-trinq-accent-hover hover:shadow-md"
+              className="min-h-11 flex-1 whitespace-nowrap rounded-lg bg-trinq-accent px-4 py-2.5 text-[13px] font-bold text-white transition-all hover:bg-trinq-accent-hover hover:shadow-md"
             >
               Tümünü Kabul Et
             </button>
             <button
               onClick={handleDecline}
-              className="flex-1 whitespace-nowrap rounded-lg border border-trinq-accent/30 px-4 py-2.5 text-[13px] font-semibold text-white transition-all hover:border-trinq-accent/50 hover:bg-white/5"
+              className="min-h-11 flex-1 whitespace-nowrap rounded-lg border border-trinq-accent/30 px-4 py-2.5 text-[13px] font-semibold text-white transition-all hover:border-trinq-accent/50 hover:bg-white/5"
             >
               Tümünü Reddet
             </button>

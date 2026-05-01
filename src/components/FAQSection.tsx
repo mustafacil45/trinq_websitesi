@@ -52,7 +52,7 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="bg-background py-20 sm:py-24 lg:py-28" id="sss">
+    <section className="bg-white py-20 sm:py-24 lg:py-28" id="sss">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center"

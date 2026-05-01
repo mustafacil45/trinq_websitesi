@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f8f9;
+  --background: #ffffff;
   --foreground: #1e293b;
   /* trinQ: derin yeşil + sade siyah vurgu (gri-mavi ton yok) */
   --trinq-navy: #11392e;
@@ -10,7 +10,7 @@
   --trinq-accent-hover: #171717;
   --trinq-accent-light: #2e2e2e;
   --trinq-muted: #475569;
-  --trinq-bg: #f4f8f9;
+  --trinq-bg: #ffffff;
   --trinq-blue: var(--trinq-accent);
   --trinq-blue-light: var(--trinq-accent-light);
   --trinq-dark: var(--trinq-navy);
@@ -54,6 +54,25 @@ h6 {
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+button,
+span,
+li {
+  overflow-wrap: break-word;
 }
 
 /* Anchor linkler fixed header altında kalmasın */

@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Users, BarChart3, Megaphone } from "lucide-react";
-import Logo from "./Logo";
 
 const BENEFITS = [
   { icon: Users, title: "Müşteri Sadakati Artır", desc: "Tekrarlayan ziyaretler ve bağlı müşteri tabanı." },
@@ -12,7 +11,7 @@ const BENEFITS = [
 
 export default function BusinessSection() {
   return (
-    <section className="bg-background py-20 sm:py-24 lg:py-28" id="isletmeler-icin">
+    <section className="bg-white py-14 sm:py-20 lg:py-28" id="isletmeler-icin">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <motion.div
@@ -21,10 +20,10 @@ export default function BusinessSection() {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.45 }}
           >
-            <h2 className="text-3xl font-bold text-trinq-navy sm:text-4xl">
+            <h2 className="text-3xl font-bold leading-tight text-trinq-navy sm:text-4xl">
               İşletmeler İçin
             </h2>
-            <p className="mt-4 text-lg text-trinq-muted/90">
+            <p className="mt-4 text-base leading-relaxed text-trinq-muted/90 sm:text-lg">
               trinQ ile müşteri sadakati programını dijitalleştir, verilerini takip et.
             </p>
             <ul className="mt-8 space-y-5">
@@ -56,7 +55,7 @@ export default function BusinessSection() {
             >
               <motion.a
                 href="#giris"
-                className="inline-flex rounded-full bg-trinq-accent px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-trinq-accent/15 transition hover:bg-trinq-accent-hover"
+                className="inline-flex w-full justify-center rounded-full bg-trinq-accent px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-trinq-accent/15 transition hover:bg-trinq-accent-hover sm:w-auto"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}

@@ -69,7 +69,22 @@ export default function ContactSection() {
           kvkkApproved: true,
         }),
       });
-      const data = (await res.json().catch(() => ({}))) as { error?: string };
+
+      const data = (await res.json().catch(() => ({}))) as { error?: string; dryRun?: boolean };
+
+      if (data.dryRun) {
+        setStatus({
+          type: "success",
+          text: "Deneme modu: e-posta gönderilmedi (CONTACT_DRY_RUN=1). Form doğrulaması tamam.",
+        });
+        setFullName("");
+        setEmail("");
+        setPhone("");
+        setMessage("");
+        setConsent(false);
+        return;
+      }
+
       if (!res.ok) {
         const reason = res.headers.get("X-Contact-Reason");
         if (reason === "missing_env") {
@@ -109,9 +124,9 @@ export default function ContactSection() {
   }
 
   return (
-    <section className="bg-background py-20 sm:py-24 lg:py-28" id="iletisim">
+    <section className="bg-white py-14 sm:py-20 lg:py-28" id="iletisim">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           {/* Sol: Başlık + İletişim Bilgileri */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -119,14 +134,14 @@ export default function ContactSection() {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.45 }}
           >
-            <h2 className="text-3xl font-bold text-trinq-navy sm:text-4xl">
+            <h2 className="text-3xl font-bold leading-tight text-trinq-navy sm:text-4xl">
               Bizimle İletişime Geçin
             </h2>
-            <p className="mt-4 max-w-md text-lg leading-relaxed text-trinq-muted/90">
+            <p className="mt-4 max-w-md text-base leading-relaxed text-trinq-muted/90 sm:text-lg">
               İşletmenizi dijital çağa taşımaya hazır mısınız? Sorularınız, önerileriniz veya demo talepleriniz için bize ulaşın. Ekibimiz size en kısa sürede dönüş yapacaktır.
             </p>
 
-            <div className="mt-10 space-y-6">
+            <div className="mt-8 space-y-5 sm:mt-10 sm:space-y-6">
               <div className="flex items-start gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-trinq-accent/10">
                   <Mail size={20} className="text-trinq-accent" />
@@ -155,7 +170,7 @@ export default function ContactSection() {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.45 }}
           >
-            <div className="rounded-[24px] border border-slate-100 bg-[#FAFBFC] p-8 shadow-sm sm:p-10">
+            <div className="rounded-[22px] border border-slate-100 bg-[#FAFBFC] p-5 shadow-sm sm:rounded-[24px] sm:p-10">
               <h3 className="mb-2 text-xl font-bold text-trinq-navy">Bize Ulaşın</h3>
               <p className="mb-8 text-sm text-trinq-muted/80">
                 Sorularınız için aşağıdaki formu doldurabilirsiniz.
@@ -172,7 +187,7 @@ export default function ContactSection() {
                     placeholder="Ahmet Yılmaz"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10"
+                    className="min-h-12 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10 sm:text-sm"
                   />
                 </div>
                 <div>
@@ -185,7 +200,7 @@ export default function ContactSection() {
                     placeholder="ornek@sirket.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10"
+                    className="min-h-12 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10 sm:text-sm"
                   />
                 </div>
                 <div>
@@ -193,7 +208,7 @@ export default function ContactSection() {
                     Cep Telefonu
                   </label>
                   <div className="flex gap-2">
-                    <span className="flex items-center rounded-xl border border-gray-200 bg-white px-3 text-sm text-trinq-muted">
+                    <span className="flex min-h-12 items-center rounded-xl border border-gray-200 bg-white px-3 text-sm text-trinq-muted">
                       +90
                     </span>
                     <input
@@ -204,7 +219,7 @@ export default function ContactSection() {
                       placeholder="5XX XXX XX XX"
                       value={phone}
                       onChange={(e) => setPhone(formatTurkishMobileDisplay(e.target.value))}
-                      className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10"
+                      className="min-h-12 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10 sm:text-sm"
                     />
                   </div>
                 </div>
@@ -218,7 +233,7 @@ export default function ContactSection() {
                     placeholder="Mesajınızı buraya yazın..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10"
+                    className="min-h-[128px] w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10 sm:text-sm"
                   />
                 </div>
                 <div className="flex items-start gap-2">

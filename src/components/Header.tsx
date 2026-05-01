@@ -53,11 +53,11 @@ export default function Header() {
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* Ortalanmış iç konteyner — max 1280px, yatay padding 24–40px */}
-        <div className="mx-auto w-full max-w-[1280px] overflow-visible px-6 md:px-8 xl:px-10">
+        <div className="mx-auto w-full max-w-[1280px] overflow-visible px-4 sm:px-6 md:px-8 xl:px-10">
           {/* Mobil: logo + hamburger */}
           <div className={`flex ${HEADER_HEIGHT} items-center justify-between lg:hidden`}>
             <Link href="/" className="flex h-full min-w-0 shrink-0 items-center" aria-label="trinQ ana sayfa">
-              <Logo size="header" showText={true} variant="light" floatingInHeader />
+              <Logo className="-ml-2 scale-90 sm:ml-0 sm:scale-100" size="header" showText={true} variant="light" floatingInHeader />
             </Link>
             <button
               type="button"
@@ -142,7 +142,7 @@ export default function Header() {
               transition={{ duration: 0.2 }}
               className="overflow-hidden bg-trinq-navy lg:hidden"
             >
-              <nav className="mx-auto flex max-w-[1280px] flex-col gap-1 px-6 pb-4 pt-2 md:px-8 xl:px-10" aria-label="Mobil menü">
+              <nav className="mx-auto flex max-w-[1280px] flex-col gap-1 px-4 pb-4 pt-2 sm:px-6 md:px-8 xl:px-10" aria-label="Mobil menü">
                 {NAV_LINKS.map((link) => (
                   <Link
                     key={link.href}

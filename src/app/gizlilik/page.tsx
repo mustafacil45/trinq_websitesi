@@ -10,10 +10,10 @@ export default function GizlilikPolitikasiPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-slate-50 pt-32 pb-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-sm border border-slate-100">
-            <h1 className="text-3xl font-bold text-slate-900 mb-8 font-heading">Gizlilik Politikası</h1>
+      <main className="min-h-screen bg-slate-50 pb-16 pt-28 sm:pb-24 sm:pt-32">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm sm:p-12">
+            <h1 className="mb-6 text-3xl font-bold leading-tight text-slate-900 sm:mb-8">Gizlilik Politikası</h1>
             
             <div className="text-slate-600 leading-relaxed text-base">
               <p className="mb-6"><strong>Son Güncelleme:</strong> {new Date().toLocaleDateString('tr-TR')}</p>

@@ -15,7 +15,7 @@ export default function DigitalRevolutionSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-background py-20 sm:py-24 lg:py-28"
+      className="relative overflow-hidden bg-white py-20 sm:py-24 lg:py-28"
       id="dijital-devrim"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

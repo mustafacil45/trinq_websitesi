@@ -90,7 +90,7 @@ export default function BusinessLeadModal({ open, onClose }: Props) {
       {open && (
         <motion.div
           key="business-lead-shell"
-          className="fixed inset-0 z-[200] flex items-end justify-center sm:items-center sm:p-4"
+          className="fixed inset-0 z-[200] flex items-end justify-center p-3 sm:items-center sm:p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -108,14 +108,14 @@ export default function BusinessLeadModal({ open, onClose }: Props) {
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="relative z-10 flex max-h-[min(92vh,880px)] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:max-h-[90vh] sm:rounded-3xl"
+            className="relative z-10 flex max-h-[min(92vh,880px)] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl sm:max-h-[90vh]"
             initial={{ opacity: 0, y: 28, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 pb-4 pt-5 sm:px-8">
+            <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-5 pb-4 pt-5 sm:px-8">
               <h2 id={titleId} className="text-lg font-bold text-slate-800 sm:text-xl">
                 İşletme Başvurusu
               </h2>
@@ -129,7 +129,7 @@ export default function BusinessLeadModal({ open, onClose }: Props) {
               </button>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-5 sm:px-8 sm:py-6">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-8 sm:py-6">
               {feedback === "success" ? (
                 <div className="flex flex-col items-center gap-5 py-2">
                   <p className="text-center text-sm leading-relaxed text-slate-600">
@@ -222,7 +222,7 @@ export default function BusinessLeadModal({ open, onClose }: Props) {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="mt-1 w-full rounded-lg bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-md transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:min-w-[140px]"
+                    className="mt-1 min-h-12 w-full rounded-lg bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-md transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:min-w-[140px]"
                   >
                     {submitting ? "Gönderiliyor…" : "Gönder"}
                   </button>
@@ -258,4 +258,4 @@ function Field({
 }
 
 const inputClass =
-  "w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-400/25";
+  "min-h-12 w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-400/25 sm:text-sm";

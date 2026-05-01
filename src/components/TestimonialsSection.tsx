@@ -51,7 +51,7 @@ export default function TestimonialsSection() {
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   return (
-    <section ref={ref} className="bg-background py-20 sm:py-24 lg:py-28">
+    <section ref={ref} className="bg-white py-20 sm:py-24 lg:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="mb-14 text-center"

@@ -181,7 +181,7 @@ export default function StoresSection() {
   }, [category]);
 
   return (
-    <section className="bg-[#F8FAFC] py-20 sm:py-24 lg:py-28" id="isletmeler">
+    <section className="bg-white py-14 sm:py-20 lg:py-28" id="isletmeler">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center"
@@ -190,18 +190,18 @@ export default function StoresSection() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-bold text-trinq-navy sm:text-4xl">
+          <h2 className="text-3xl font-bold leading-tight text-trinq-navy sm:text-4xl">
             İşletmeler
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-trinq-muted/90">
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-trinq-muted/90 sm:text-lg">
             Anlaşmalı işletmeler haritada gösterilir. Yakınındaki mekanları keşfet.
           </p>
         </motion.div>
 
         {/* Harita + telefon */}
-        <div className="mt-14 grid min-w-0 grid-cols-1 items-center gap-6 lg:grid-cols-2 lg:gap-8">
+        <div className="mt-10 grid min-w-0 grid-cols-1 items-center gap-6 sm:mt-14 lg:grid-cols-2 lg:gap-8">
           <motion.div
-            className="relative w-full h-[400px] max-w-md overflow-hidden rounded-2xl bg-slate-200 shadow-xl lg:max-w-full lg:h-[600px]"
+            className="relative h-[300px] w-full max-w-md overflow-hidden rounded-2xl bg-slate-200 shadow-xl sm:h-[400px] lg:h-[600px] lg:max-w-full"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
@@ -217,13 +217,13 @@ export default function StoresSection() {
             transition={{ duration: 0.5 }}
           >
             <motion.div
-              className="relative w-[220px] sm:w-[250px] lg:w-[260px] cursor-default"
+              className="relative w-[195px] cursor-default min-[375px]:w-[215px] sm:w-[250px] lg:w-[260px]"
               whileHover={{ y: -6 }}
               transition={{ type: "tween", duration: 0.2, ease: "easeOut" }}
             >
-              <div className="relative overflow-hidden rounded-[52px] border-[10px] border-zinc-800 bg-zinc-900 shadow-2xl">
+              <div className="relative overflow-hidden rounded-[40px] border-[8px] border-zinc-800 bg-zinc-900 shadow-2xl sm:rounded-[52px] sm:border-[10px]">
                 <div
-                  className="relative flex w-full items-center justify-center overflow-hidden rounded-[42px] bg-black"
+                  className="relative flex w-full items-center justify-center overflow-hidden rounded-[32px] bg-black sm:rounded-[42px]"
                   style={{ aspectRatio: "390/844" }}
                 >
                   <img
@@ -238,13 +238,13 @@ export default function StoresSection() {
         </div>
 
         {/* Filtre chip'leri */}
-        <div className="mt-14 flex flex-wrap justify-center gap-2">
+        <div className="mt-10 flex flex-wrap justify-center gap-2 sm:mt-14">
           {CATEGORIES.map((c) => (
             <button
               key={c.value}
               type="button"
               onClick={() => setCategory(c.value)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+              className={`min-h-10 rounded-full px-4 py-2 text-sm font-medium transition ${
                 category === c.value
                   ? "bg-trinq-accent text-white shadow-sm"
                   : "bg-white text-trinq-muted shadow-sm ring-1 ring-slate-200/80 hover:ring-trinq-accent/50 hover:text-trinq-accent"
@@ -257,12 +257,12 @@ export default function StoresSection() {
 
         {/* Carousel: 4 kart + sağda 5. kartın peek'i, oklar hover'da */}
         <div
-          className="relative mt-8"
+            className="relative mt-6 sm:mt-8"
           onMouseEnter={() => setShowArrows(true)}
           onMouseLeave={() => setShowArrows(false)}
         >
           <div
-            className="mx-auto overflow-hidden"
+            className="mx-auto overflow-hidden px-1"
             style={{
               maxWidth: (CARD_WIDTH + GAP) * VISIBLE_CARDS + 24,
             }}
@@ -301,15 +301,15 @@ export default function StoresSection() {
 
             <div
               ref={scrollRef}
-              className="scrollbar-hide flex gap-5 overflow-x-auto pb-2 scroll-smooth"
+              className="scrollbar-hide flex gap-4 overflow-x-auto pb-2 scroll-smooth sm:gap-5"
               style={{ scrollSnapType: "x mandatory" }}
             >
                 {filtered.map((store) => (
                   <motion.article
                     key={store.id}
-                    className="relative flex-shrink-0 rounded-[20px] border border-trinq-accent/10 bg-white p-5 shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition hover:border-trinq-accent/25 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
+                    className="relative flex-shrink-0 rounded-[20px] border border-trinq-accent/10 bg-white p-4 shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition hover:border-trinq-accent/25 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] sm:p-5"
                     style={{
-                      width: CARD_WIDTH,
+                      width: "min(280px, calc(100vw - 48px))",
                       scrollSnapAlign: "start",
                     }}
                     initial={{ opacity: 0, y: 8 }}
@@ -354,7 +354,7 @@ export default function StoresSection() {
                         <Heart className={`h-5 w-5 ${store.favorite ? "fill-trinq-accent" : ""}`} />
                       </button>
                     </div>
-                    <div className="mt-4 flex gap-2">
+                    <div className="mt-4 flex flex-col gap-2 min-[375px]:flex-row">
                       <button
                         type="button"
                         className="rounded-full bg-trinq-accent px-4 py-2 text-xs font-medium text-white transition hover:bg-trinq-accent-hover"

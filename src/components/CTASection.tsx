@@ -34,14 +34,14 @@ export default function CTASection() {
 
   return (
     <>
-    <section className="relative overflow-hidden bg-trinq-navy py-20 sm:py-24 lg:py-28" id="indir">
+    <section className="relative overflow-hidden bg-trinq-navy py-14 sm:py-20 lg:py-28" id="indir">
       {/* Hafif gradient derinlik */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-trinq-accent/8 to-transparent opacity-60" />
       <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-trinq-accent/10 blur-[80px]" />
 
       <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
         <motion.h2
-          className="text-3xl font-semibold tracking-tight text-white sm:text-4xl"
+          className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl"
           style={{ letterSpacing: "-0.02em" }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -51,7 +51,7 @@ export default function CTASection() {
           trinQ&apos;i Hemen İndir
         </motion.h2>
         <motion.p
-          className="mx-auto mt-4 max-w-xl text-lg text-white/90"
+          className="mx-auto mt-4 max-w-xl text-base text-white/90 sm:text-lg"
           style={{ lineHeight: 1.6 }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -61,7 +61,7 @@ export default function CTASection() {
           Fişlerini topla, damga kazan, ödüllerini al. App Store ve Google Play’de ücretsiz.
         </motion.p>
         <motion.div
-          className="mt-10 flex flex-col items-center gap-8"
+          className="mt-8 flex flex-col items-center gap-6 sm:mt-10 sm:gap-8"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-20px" }}
@@ -69,7 +69,7 @@ export default function CTASection() {
         >
           <motion.button
             onClick={handleDownload}
-            className="inline-flex items-center gap-3 rounded-full bg-trinq-accent px-8 py-4 text-lg font-bold text-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] transition-all hover:bg-trinq-accent-hover hover:shadow-[0_12px_40px_rgba(0,0,0,0.22)]"
+            className="inline-flex min-h-12 w-full max-w-sm items-center justify-center gap-3 rounded-full bg-trinq-accent px-6 py-3.5 text-base font-bold text-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] transition-all hover:bg-trinq-accent-hover hover:shadow-[0_12px_40px_rgba(0,0,0,0.22)] sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -92,7 +92,7 @@ export default function CTASection() {
             )}
           </motion.button>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-5">
+          <div className="grid w-full max-w-sm grid-cols-1 justify-items-center gap-3 sm:max-w-none sm:grid-cols-2 sm:gap-4 md:gap-5">
             <a
               href={APP_STORE_URL}
               target="_blank"

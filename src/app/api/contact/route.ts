@@ -2,10 +2,7 @@ import { NextResponse } from "next/server";
 import sgMail from "@sendgrid/mail";
 import { z } from "zod";
 
-/** SendGrid Node SDK; Edge’de çalışmaz */
 export const runtime = "nodejs";
-
-/** Vercel / proxy arkasında Host ile ziyaret edilen alan adı farklı olabiliyor */
 export const dynamic = "force-dynamic";
 
 const bodySchema = z.object({
@@ -42,7 +39,6 @@ function escapeHtml(s: string) {
     .replace(/'/g, "&#39;");
 }
 
-/** 10 hane → "5XX XXX XX XX" (görüntü / e-posta için) */
 function formatTrMobile10(d: string) {
   return `${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6, 8)} ${d.slice(8, 10)}`;
 }
@@ -58,13 +54,11 @@ function getClientIp(req: Request) {
   return req.headers.get("x-real-ip") || "unknown";
 }
 
-/** Host başlığından portu at (örn. :443) */
 function hostOnly(host: string | null): string | null {
   if (!host) return null;
   return host.split(":")[0].toLowerCase();
 }
 
-/** Önce X-Forwarded-Host (virgülle çoklu gelebilir), yoksa Host */
 function effectiveRequestHost(req: Request): string | null {
   const xf = req.headers.get("x-forwarded-host");
   if (xf) {
@@ -74,7 +68,6 @@ function effectiveRequestHost(req: Request): string | null {
   return hostOnly(req.headers.get("host"));
 }
 
-/** example.com ile www.example.com aynı site sayılır (canlıda 403/500 karışmasın) */
 function hostsMatch(a: string, b: string): boolean {
   if (a === b) return true;
   const strip = (h: string) => h.replace(/^www\./, "");
@@ -122,7 +115,6 @@ function mergeHeaders(base: Headers, extra: Record<string, string>) {
   return h;
 }
 
-/** SendGrid / bazı hata gövdeleri stringify edilemeyebilir; log satırını asla patlatma */
 function safeStringify(value: unknown): string {
   try {
     return JSON.stringify(value);
@@ -207,6 +199,18 @@ async function handleContactPost(req: Request) {
     );
   }
 
+  const dryRun =
+    process.env.NODE_ENV === "development" && process.env.CONTACT_DRY_RUN === "1";
+  if (dryRun) {
+    console.warn("[contact] CONTACT_DRY_RUN=1 — e-posta gönderilmedi (yalnızca development).", {
+      email: safe.email,
+    });
+    return NextResponse.json(
+      { ok: true, success: true, dryRun: true },
+      { headers: mergeHeaders(corsHeaders(req), { "X-Contact-Dry-Run": "1" }) }
+    );
+  }
+
   const sendGridKey = process.env.SENDGRID_API_KEY?.trim();
   const toRaw = process.env.CONTACT_RECEIVER_EMAIL?.trim();
   const toList = toRaw
@@ -223,7 +227,7 @@ async function handleContactPost(req: Request) {
       toList.length === 0 && "CONTACT_RECEIVER_EMAIL",
       !from && "CONTACT_SENDER_EMAIL",
     ].filter(Boolean);
-    console.error("[contact] Missing env (Production’da Vercel → Settings → Environment Variables):", missing.join(", "));
+    console.error("[contact] Missing env:", missing.join(", "));
     return NextResponse.json(
       { error: "Mesaj gönderilirken bir sorun oluştu. Lütfen tekrar deneyin." },
       { status: 500, headers: mergeHeaders(corsHeaders(req), { "X-Contact-Reason": "missing_env" }) }

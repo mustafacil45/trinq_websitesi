@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import AboutSection from "@/components/AboutSection";
 import FeaturesGridSection from "@/components/FeaturesGridSection";
 import AppShowcaseSection from "@/components/AppShowcaseSection";
 import UsersSection from "@/components/UsersSection";
@@ -19,9 +20,8 @@ export default function Home() {
     <>
       <Header />
       <MainWithReveal>
-        {/* #hakkimizda: yalnızca menü hedefi (ayrı “hakkımızda” içerik bloğu yok) */}
         <Hero />
-        <div id="hakkimizda" className="h-px w-full" aria-hidden />
+        <AboutSection />
         <FeaturesGridSection />
         <AppShowcaseSection />
         <HowItWorksSection />

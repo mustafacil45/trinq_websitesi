@@ -8,7 +8,7 @@ const STAMPS_FILLED = 3;
 
 export default function LoyaltyCardAnimation() {
   return (
-<section className="bg-[#F8FAFC] py-20 sm:py-24 lg:py-28">
+<section className="bg-white py-20 sm:py-24 lg:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center"

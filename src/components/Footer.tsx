@@ -38,15 +38,15 @@ export default function Footer() {
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {/* Ana grid: 4 kolon */}
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4">
           {/* 1. Kolon: Logo + Açıklama */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block" aria-label="trinQ ana sayfa">
               <Logo size="sm" showText={true} variant="light" />
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/60">
               Sadakat platformu. Fişlerini topla, damga kazan, ödüllerini al. İşletmenizi dijitale taşıyın.
             </p>
             {/* Sosyal medya */}
@@ -76,7 +76,7 @@ export default function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-white/60 transition hover:text-white"
+                  className="text-sm leading-relaxed text-white/60 transition hover:text-white"
                 >
                   {link.label}
                 </Link>
@@ -94,7 +94,7 @@ export default function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-white/60 transition hover:text-white"
+                  className="text-sm leading-relaxed text-white/60 transition hover:text-white"
                 >
                   {link.label}
                 </Link>
@@ -117,7 +117,7 @@ export default function Footer() {
               <li>
                 <a
                   href="mailto:info@trinqapp.com"
-                  className="flex items-center gap-3 text-sm text-white/60 transition hover:text-white"
+                  className="flex items-center gap-3 text-sm text-white/60 transition hover:text-white [overflow-wrap:anywhere]"
                 >
                   <Mail size={16} className="shrink-0 text-white/50" />
                   info@trinqapp.com

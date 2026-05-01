@@ -38,30 +38,30 @@ export default function PanelGirisPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-white text-neutral-900">
+    <div className="flex min-h-screen flex-col bg-white text-neutral-900 lg:flex-row">
       {/* Sol: form — sadece bu sayfa için siyah-beyaz */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-12 lg:px-20 py-12 lg:py-0 bg-[#FAFAFA] border-b lg:border-b-0 lg:border-r border-neutral-200">
+      <div className="flex w-full flex-col justify-center border-b border-neutral-200 bg-[#FAFAFA] px-4 py-10 sm:px-12 sm:py-12 lg:w-1/2 lg:border-b-0 lg:border-r lg:px-20 lg:py-0">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className="max-w-md mx-auto w-full"
+          className="mx-auto w-full max-w-md"
         >
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-neutral-900 hover:text-neutral-600 transition-colors mb-10"
+            className="mb-8 inline-flex items-center gap-2 text-sm text-neutral-900 transition-colors hover:text-neutral-600 sm:mb-10"
           >
             <ArrowLeft className="w-4 h-4" />
             Ana Sayfaya Dön
           </Link>
 
-          <div className="mb-10">
+          <div className="mb-8 sm:mb-10">
             <img
               src="/trinq-logo.png"
               alt="trinQ"
               className="h-8 w-auto object-contain mb-8 grayscale"
             />
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 mb-3">
+            <h1 className="mb-3 text-3xl font-bold leading-tight tracking-tight text-neutral-900 sm:text-4xl">
               İşletme Paneli
             </h1>
             <p className="text-neutral-600 leading-relaxed">
@@ -89,7 +89,7 @@ export default function PanelGirisPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@trinq.app"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-neutral-200 bg-white text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent transition-all"
+                  className="min-h-12 w-full rounded-xl border border-neutral-200 bg-white py-3.5 pl-12 pr-4 text-base text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-neutral-900 sm:text-sm"
                 />
               </div>
             </div>
@@ -116,7 +116,7 @@ export default function PanelGirisPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-neutral-200 bg-white text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent transition-all"
+                  className="min-h-12 w-full rounded-xl border border-neutral-200 bg-white py-3.5 pl-12 pr-4 text-base text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-neutral-900 sm:text-sm"
                 />
               </div>
             </div>
@@ -135,7 +135,7 @@ export default function PanelGirisPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 rounded-xl bg-neutral-900 text-white font-semibold tracking-wide hover:bg-neutral-800 disabled:opacity-60 disabled:pointer-events-none transition-colors shadow-sm"
+              className="min-h-12 w-full rounded-xl bg-neutral-900 py-4 font-semibold tracking-wide text-white shadow-sm transition-colors hover:bg-neutral-800 disabled:pointer-events-none disabled:opacity-60"
             >
               {loading ? "Giriş yapılıyor…" : "GİRİŞ YAP"}
             </button>

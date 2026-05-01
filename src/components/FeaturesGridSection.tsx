@@ -48,7 +48,7 @@ const item = {
 
 export default function FeaturesGridSection() {
   return (
-    <section className="bg-background py-20 sm:py-24 lg:py-28" id="ozellikler">
+    <section className="bg-white py-14 sm:py-20 lg:py-28" id="ozellikler">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center"
@@ -60,13 +60,13 @@ export default function FeaturesGridSection() {
           <span className="text-sm font-bold uppercase tracking-widest text-trinq-accent">
             ÖZELLİKLER
           </span>
-          <h2 className="mt-3 text-3xl font-bold text-trinq-navy sm:text-4xl">
+          <h2 className="mt-3 text-3xl font-bold leading-tight text-trinq-navy sm:text-4xl">
             Neler Sunuyoruz?
           </h2>
         </motion.div>
 
         <motion.div
-          className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-10 grid gap-5 sm:mt-14 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3"
           variants={container}
           initial="hidden"
           whileInView="show"
@@ -76,7 +76,7 @@ export default function FeaturesGridSection() {
             <motion.div
               key={f.title}
               variants={item}
-              className="group rounded-[20px] border border-slate-100 bg-white p-7 shadow-sm transition-all hover:-translate-y-1 hover:border-trinq-accent/20 hover:shadow-lg"
+              className="group rounded-[20px] border border-slate-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-trinq-accent/20 hover:shadow-lg sm:p-7"
             >
               <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-trinq-navy/5 transition-colors group-hover:bg-trinq-accent/10">
                 <f.icon className="h-6 w-6 text-trinq-navy transition-colors group-hover:text-trinq-accent" strokeWidth={1.5} />
