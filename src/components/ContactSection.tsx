@@ -77,6 +77,11 @@ export default function ContactSection() {
             "Mesaj şu an sistem üzerinden iletilemiyor. Lütfen doğrudan info@trinqapp.com adresine yazın."
           );
         }
+        if (reason === "sendgrid_auth") {
+          throw new Error(
+            data.error || "E-posta servisi ayarı doğrulanamadı. Lütfen doğrudan info@trinqapp.com adresine yazın."
+          );
+        }
         const base = data.error || "Mesaj gönderilirken bir sorun oluştu. Lütfen tekrar deneyin.";
         if (reason === "sendgrid") {
           throw new Error(`${base} Sorun sürerse info@trinqapp.com ile iletişime geçebilirsiniz.`);

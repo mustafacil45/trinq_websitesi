@@ -131,6 +131,16 @@ function safeStringify(value: unknown): string {
   }
 }
 
+type SendGridError = {
+  code?: number | string;
+  message?: string;
+  response?: { body?: unknown };
+};
+
+function isSendGridAuthError(err: SendGridError) {
+  return Number(err.code) === 401;
+}
+
 export async function OPTIONS(req: Request) {
   return new NextResponse(null, { status: 204, headers: corsHeaders(req) });
 }
@@ -257,11 +267,21 @@ async function handleContactPost(req: Request) {
       html,
     });
   } catch (err: unknown) {
-    const sg = err as { response?: { body?: unknown }; message?: string };
+    const sg = err as SendGridError;
     console.error("[contact] SendGrid:", safeStringify(sg?.response?.body ?? null), sg?.message ?? err);
+    const isAuthError = isSendGridAuthError(sg);
     return NextResponse.json(
-      { error: "Mesaj gönderilirken bir sorun oluştu. Lütfen tekrar deneyin." },
-      { status: 500, headers: mergeHeaders(corsHeaders(req), { "X-Contact-Reason": "sendgrid" }) }
+      {
+        error: isAuthError
+          ? "E-posta servisi ayarı doğrulanamadı. Lütfen doğrudan info@trinqapp.com adresine yazın."
+          : "Mesaj gönderilirken bir sorun oluştu. Lütfen tekrar deneyin.",
+      },
+      {
+        status: 500,
+        headers: mergeHeaders(corsHeaders(req), {
+          "X-Contact-Reason": isAuthError ? "sendgrid_auth" : "sendgrid",
+        }),
+      }
     );
   }
 
