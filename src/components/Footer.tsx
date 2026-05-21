@@ -19,9 +19,10 @@ const QUICK_LINKS = [
 
 const LEGAL_LINKS = [
   { href: "/kvkk", label: "KVKK Aydınlatma Metni" },
-  { href: "/cerez-politikasi", label: "Çerez Politikası" },
-  { href: "/kullanim-kosullari", label: "Kullanım Koşulları" },
-  { href: "/gizlilik", label: "Gizlilik Politikası" },
+  { href: "/acik-riza", label: "Açık Rıza Beyanı" },
+  { href: "/privacy", label: "Gizlilik Politikası" },
+  { href: "/terms", label: "Kullanıcı Sözleşmesi (EULA)" },
+  { href: "/support", label: "Destek (Support)" },
 ];
 
 const SOCIAL = [
