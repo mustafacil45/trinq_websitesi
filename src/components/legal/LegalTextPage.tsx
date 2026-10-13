@@ -17,7 +17,7 @@ function renderLine(line: string, index: number, hiddenHeadingLineIndexes: Set<n
 
   if (index === 0) {
     return (
-      <p key={index} className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-amber-600">
+      <p key={index} className="t-eyebrow mb-3 text-trinq-navy-mid">
         {line}
       </p>
     );
@@ -25,7 +25,7 @@ function renderLine(line: string, index: number, hiddenHeadingLineIndexes: Set<n
 
   if (line.startsWith("• ")) {
     return (
-      <h2 key={index} className="mb-4 mt-8 text-xl font-semibold text-slate-900">
+      <h2 key={index} className="mb-4 mt-9 text-xl font-bold tracking-tight text-trinq-navy">
         {line.replace("• ", "")}
       </h2>
     );
@@ -33,7 +33,7 @@ function renderLine(line: string, index: number, hiddenHeadingLineIndexes: Set<n
 
   if (/^\d+\.\s/.test(line)) {
     return (
-      <h2 key={index} className="mb-4 mt-8 text-xl font-semibold text-slate-900">
+      <h2 key={index} className="mb-4 mt-9 text-xl font-bold tracking-tight text-trinq-navy">
         {line}
       </h2>
     );
@@ -41,7 +41,7 @@ function renderLine(line: string, index: number, hiddenHeadingLineIndexes: Set<n
 
   if (/^\d+\.\d+\.\s/.test(line)) {
     return (
-      <p key={index} className="mb-3 font-medium text-slate-700">
+      <p key={index} className="mb-3 font-semibold text-trinq-navy/85">
         {line}
       </p>
     );
@@ -62,7 +62,7 @@ function renderLine(line: string, index: number, hiddenHeadingLineIndexes: Set<n
       key={index}
       className={
         isUpdateLine
-          ? "mt-8 border-t border-slate-200 pt-6 text-sm font-medium text-slate-700"
+          ? "mt-8 border-t border-trinq-line pt-6 text-sm font-medium text-trinq-navy/80"
           : "mb-5"
       }
     >
@@ -81,14 +81,14 @@ export default function LegalTextPage({ content }: LegalTextPageProps) {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-slate-50 pb-16 pt-28 sm:pb-24 sm:pt-32">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <article className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm sm:p-12">
-            <h1 className="mb-6 text-3xl font-bold leading-tight text-slate-900 sm:mb-8">
+      <main className="min-h-screen bg-trinq-paper pb-16 pt-28 sm:pb-24 sm:pt-32">
+        <div className="mx-auto max-w-4xl px-5 sm:px-6 lg:px-8">
+          <article className="rounded-[26px] border border-trinq-line bg-white p-5 shadow-[var(--shadow-sm)] sm:p-12">
+            <h1 className="t-h2 mb-6 text-trinq-navy sm:mb-8">
               {getHeading(lines)}
             </h1>
 
-            <div className="space-y-1 text-base leading-relaxed text-slate-600">
+            <div className="t-body space-y-1 text-trinq-muted">
               {lines.map((line, index) => renderLine(line, index, hiddenHeadingLineIndexes))}
             </div>
           </article>

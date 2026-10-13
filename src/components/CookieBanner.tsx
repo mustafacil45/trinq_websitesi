@@ -2,67 +2,137 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { Cookie } from "lucide-react";
 
+const STORAGE_KEY = "trinq_cookie_consent";
+
+/**
+ * Çerez tercihleri.
+ *
+ * Önceki sürümde banner sol altta sabit duruyor ve kapatılana kadar sayfa
+ * içeriğinin bir kısmını örtüyordu; "Özelleştir" ise bloklayan bir
+ * `alert()` açıyordu. Artık mobilde alt sayfa (bottom sheet), masaüstünde
+ * köşede kompakt bir kart ve özelleştirme satır içi.
+ */
 export default function CookieBanner() {
-  const [showBanner, setShowBanner] = useState(false);
+  const [show, setShow] = useState(false);
+  const [analytics, setAnalytics] = useState(false);
+  const [customizing, setCustomizing] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem("trinq_cookie_consent");
-    if (!consent) {
-      setShowBanner(true);
-    }
+    // İlk boyamadan sonra oku: SSR'da localStorage yok, commit sırasında
+    // senkron setState ise gereksiz bir render zinciri yaratıyor.
+    const raf = requestAnimationFrame(() => {
+      try {
+        if (!localStorage.getItem(STORAGE_KEY)) setShow(true);
+      } catch {
+        /* localStorage kapalıysa banner gösterme */
+      }
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
 
-  const handleAccept = () => {
-    localStorage.setItem("trinq_cookie_consent", "accepted");
-    setShowBanner(false);
-  };
-
-  const handleDecline = () => {
-    localStorage.setItem("trinq_cookie_consent", "declined");
-    setShowBanner(false);
-  };
-
-  const handleCustomize = () => {
-    alert("Çerez özelleştirme menüsü yakında eklenecektir.");
+  const persist = (value: string) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, value);
+    } catch {
+      /* yoksay */
+    }
+    setShow(false);
   };
 
   return (
     <AnimatePresence>
-      {showBanner && (
+      {show && (
         <motion.div
-          initial={{ y: 50, opacity: 0 }}
+          role="dialog"
+          aria-label="Çerez tercihleri"
+          initial={{ y: 28, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 50, opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="fixed inset-x-4 bottom-4 z-[100] rounded-2xl border border-white/15 bg-trinq-navy/95 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:bottom-6 sm:left-6 sm:right-auto sm:max-w-sm sm:p-6"
+          exit={{ y: 28, opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="on-dark fixed inset-x-0 bottom-0 z-[100] border-t border-white/12 bg-trinq-navy-deep/96 px-4 pb-[max(0.875rem,env(safe-area-inset-bottom))] pt-3.5 shadow-[0_-10px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:inset-x-auto sm:bottom-6 sm:left-6 sm:max-w-[400px] sm:rounded-3xl sm:border sm:p-6"
         >
-          <div className="mb-5">
-            <h3 className="mb-1.5 text-[15px] font-bold text-white">Çerez Tercihleri</h3>
-            <p className="text-xs leading-relaxed text-white/60">
-              Size platformumuzda daha iyi ve kişiselleştirilmiş bir deneyim sunabilmek için çerezlerden yararlanıyoruz.
-            </p>
+          <div className="flex items-start gap-3">
+            <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/8 text-trinq-gold-soft sm:flex">
+              <Cookie size={19} strokeWidth={1.9} />
+            </span>
+            <div className="min-w-0">
+              <h2 className="text-[14px] font-bold text-[#f6f7ef] sm:text-[15px]">Çerez tercihleri</h2>
+              <p className="mt-1 text-[12.5px] leading-snug text-[#f6f7ef]/60 sm:mt-1.5 sm:text-[13px] sm:leading-relaxed">
+                Zorunlu çerezleri kullanıyoruz; isteğe bağlı olanlara da izin
+                verebilirsin.{" "}
+                <Link
+                  href="/privacy"
+                  className="font-semibold text-trinq-gold-soft underline-offset-4 hover:underline"
+                >
+                  Gizlilik Politikası
+                </Link>
+              </p>
+            </div>
           </div>
-          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+
+          <AnimatePresence initial={false}>
+            {customizing && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="overflow-hidden"
+              >
+                <div className="mt-4 space-y-2 rounded-2xl border border-white/10 bg-white/5 p-3">
+                  <label className="flex cursor-not-allowed items-center justify-between gap-3 text-[13px] text-[#f6f7ef]/55">
+                    <span>
+                      <span className="block font-semibold text-[#f6f7ef]/80">Zorunlu</span>
+                      Oturum ve güvenlik
+                    </span>
+                    <input type="checkbox" checked disabled className="h-4 w-4 accent-[#e3c779]" />
+                  </label>
+                  <label className="flex cursor-pointer items-center justify-between gap-3 border-t border-white/8 pt-2 text-[13px] text-[#f6f7ef]/55">
+                    <span>
+                      <span className="block font-semibold text-[#f6f7ef]/80">Analitik</span>
+                      Anonim kullanım istatistikleri
+                    </span>
+                    <input
+                      type="checkbox"
+                      checked={analytics}
+                      onChange={(e) => setAnalytics(e.target.checked)}
+                      className="h-4 w-4 cursor-pointer accent-[#e3c779]"
+                    />
+                  </label>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className="mt-3 flex gap-2 sm:mt-4">
             <button
-              onClick={handleAccept}
-              className="min-h-11 flex-1 whitespace-nowrap rounded-lg bg-trinq-accent px-4 py-2.5 text-[13px] font-bold text-white transition-all hover:bg-trinq-accent-hover hover:shadow-md"
+              type="button"
+              onClick={() => persist(customizing ? (analytics ? "accepted" : "essential") : "accepted")}
+              className="min-h-[44px] flex-1 rounded-full bg-trinq-cream px-3 text-[13px] font-bold text-trinq-navy transition-colors hover:bg-white"
             >
-              Tümünü Kabul Et
+              {customizing ? "Seçimi kaydet" : "Tümünü kabul et"}
             </button>
             <button
-              onClick={handleDecline}
-              className="min-h-11 flex-1 whitespace-nowrap rounded-lg border border-trinq-accent/30 px-4 py-2.5 text-[13px] font-semibold text-white transition-all hover:border-trinq-accent/50 hover:bg-white/5"
+              type="button"
+              onClick={() => persist("declined")}
+              className="min-h-[44px] flex-1 rounded-full border border-white/20 px-3 text-[13px] font-semibold text-[#f6f7ef] transition-colors hover:bg-white/8"
             >
-              Tümünü Reddet
+              Tümünü reddet
             </button>
           </div>
-          <button
-            onClick={handleCustomize}
-            className="mt-3 w-full text-center text-[12px] font-medium text-white/55 underline transition-colors hover:text-white/85"
-          >
-            Özelleştir
-          </button>
+
+          {!customizing && (
+            <button
+              type="button"
+              onClick={() => setCustomizing(true)}
+              className="mt-2.5 w-full text-center text-[12px] font-medium text-[#f6f7ef]/50 underline underline-offset-4 transition-colors hover:text-[#f6f7ef]/80"
+            >
+              Özelleştir
+            </button>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

@@ -3,13 +3,24 @@ import { z } from "zod";
 import prisma from "@/lib/prisma";
 import sgMail from "@sendgrid/mail";
 
+/**
+ * Başvuru formu kısaltıldı: ÜNVAN, TELEFON ve MESAJ artık opsiyonel.
+ *
+ * Eskiden altı alan da zorunluydu ve `message` en az 10 karakter istiyordu —
+ * yani başvurmak için ziyaretçinin ayrıca bir metin yazması gerekiyordu.
+ * Zorunlu alanlar işletme adı, şehir/ilçe, ad soyad ve e-posta ile sınırlı.
+ *
+ * Prisma'da `title` ve `message` NOT NULL olduğu için boş gelenler "" olarak
+ * yazılıyor (şema değişikliği/migration gerektirmez).
+ */
 const bodySchema = z.object({
   businessName: z.string().trim().min(2).max(200),
   businessAddress: z.string().trim().min(3).max(500),
   fullName: z.string().trim().min(2).max(120),
-  title: z.string().trim().min(2).max(120),
   email: z.string().trim().email().max(120),
-  message: z.string().trim().min(10).max(4000),
+  title: z.string().trim().max(120).optional().default(""),
+  phone: z.string().trim().max(32).optional().default(""),
+  message: z.string().trim().max(4000).optional().default(""),
 });
 
 function cleanSingleLine(input: string) {
@@ -51,7 +62,7 @@ export async function POST(req: Request) {
     await prisma.businessLead.create({
       data: {
         ...parsed.data,
-        phone: null,
+        phone: parsed.data.phone || null,
       },
     });
   } catch {
@@ -72,32 +83,38 @@ export async function POST(req: Request) {
     businessAddress: cleanSingleLine(parsed.data.businessAddress),
     fullName: cleanSingleLine(parsed.data.fullName),
     title: cleanSingleLine(parsed.data.title),
+    phone: cleanSingleLine(parsed.data.phone),
     email: cleanSingleLine(parsed.data.email),
     message: cleanMultiline(parsed.data.message),
   };
 
+  /** Opsiyonel alanlar boşken e-postada "Ünvan: " gibi boş satır bırakmasın. */
+  const EMPTY_LABEL = "—";
+
   const text = [
-    "Yeni işletme başvurusu:",
+    "Yeni işletme başvurusu (ücretsiz pilot):",
     "",
     `İşletme Adı: ${safe.businessName}`,
-    `İşletme Adresi: ${safe.businessAddress}`,
+    `Şehir / İlçe: ${safe.businessAddress}`,
     `Ad Soyad: ${safe.fullName}`,
-    `Ünvan: ${safe.title}`,
+    `Ünvan: ${safe.title || EMPTY_LABEL}`,
     `E-posta: ${safe.email}`,
+    `Telefon: ${safe.phone || EMPTY_LABEL}`,
     "",
     "Mesaj:",
-    safe.message,
+    safe.message || EMPTY_LABEL,
   ].join("\n");
 
   const html = `
-    <h2>Yeni İşletme Başvurusu</h2>
+    <h2>Yeni İşletme Başvurusu (ücretsiz pilot)</h2>
     <p><strong>İşletme Adı:</strong> ${escapeHtml(safe.businessName)}</p>
-    <p><strong>İşletme Adresi:</strong> ${escapeHtml(safe.businessAddress)}</p>
+    <p><strong>Şehir / İlçe:</strong> ${escapeHtml(safe.businessAddress)}</p>
     <p><strong>Ad Soyad:</strong> ${escapeHtml(safe.fullName)}</p>
-    <p><strong>Ünvan:</strong> ${escapeHtml(safe.title)}</p>
+    <p><strong>Ünvan:</strong> ${escapeHtml(safe.title) || EMPTY_LABEL}</p>
     <p><strong>E-posta:</strong> ${escapeHtml(safe.email)}</p>
+    <p><strong>Telefon:</strong> ${escapeHtml(safe.phone) || EMPTY_LABEL}</p>
     <p><strong>Mesaj:</strong></p>
-    <p>${escapeHtml(safe.message).replace(/\r\n|\n|\r/g, "<br/>")}</p>
+    <p>${escapeHtml(safe.message).replace(/\r\n|\n|\r/g, "<br/>") || EMPTY_LABEL}</p>
   `;
 
   try {

@@ -2,133 +2,186 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
-import Link from "next/link";
+import { Plus } from "lucide-react";
+import { Section, SectionHeading } from "./ui/Section";
+import { Reveal } from "./ui/Reveal";
+import { CONTACT_EMAIL, PILOT_OFFER } from "@/lib/constants";
 
-const FAQ_ITEMS = [
+/**
+ * Sorular kitleye göre ayrıldı ve artık SEKME YOK.
+ *
+ * Önceden tek bölümde "Kullanıyorum / İşletmem var" sekmeleri vardı; ana
+ * sayfa işletmeye odaklandığı için ziyaretçinin kendini ilgilendirmeyen bir
+ * sekmeyi atlaması gerekiyordu. Artık ana sayfa yalnızca işletme sorularını,
+ * /kullanicilar yalnızca kullanıcı sorularını gösteriyor. İki liste de
+ * burada duruyor — kullanıcı içeriği silinmedi.
+ */
+type Audience = "business" | "user";
+
+const BUSINESS_FAQ: { q: string; a: string }[] = [
   {
-    q: "trinQ nedir?",
-    a: "trinQ, işletmeler için özel olarak geliştirilmiş bir dijital sadakat ve kampanya yönetim platformudur. Fiziksel kart ve kağıt fiş dönemini bitirip, her şeyi tek uygulama üzerinden dijital olarak yönetmenizi sağlar.",
+    q: "trinQ nedir, işletmem için ne yapıyor?",
+    a: "trinQ, kafe ve restoranların dijital damga kartları ve kampanyalarla müşteri etkileşimini yönetmesini sağlayan bir platformdur. İki parçası var: kampanyalarınızı kurduğunuz işletme paneli ve müşterilerinizin damga biriktirip kampanyalarınızı gördüğü mobil uygulama.",
   },
   {
-    q: "trinQ ücretsiz mi?",
-    a: "Evet, trinQ uygulaması kullanıcılar için tamamen ücretsizdir. İşletmeler için farklı abonelik paketleri sunuyoruz; komisyon almıyoruz, yalnızca sabit aylık ücret uyguluyoruz.",
+    q: "Pilot program ne kadar sürüyor, neler ücretsiz?",
+    a: `${
+      PILOT_OFFER.duration
+        ? `Pilot dönem ${PILOT_OFFER.duration} sürüyor. `
+        : "Pilot dönem için sabit bir süre açıklamıyoruz; programı yeni başlattığımız için dönemin bitişini siz karar vermeden önce yazılı olarak bildiriyoruz. "
+    }Pilotta ${PILOT_OFFER.includes
+      .join(", ")
+      .toLocaleLowerCase("tr-TR")} ücretsizdir.`,
   },
   {
-    q: "Damga ve puan nasıl kazanılır?",
-    a: "Anlaşmalı işletmelerde alışveriş yaptıktan sonra kasadaki QR kodu okutarak veya 6 haneli kodu girerek damga/puan kazanırsınız. Her işletmenin ödül kuralları uygulama içinde açıkça belirtilmiştir.",
+    q: "Pilot sonrasında ücret ödeyecek miyim?",
+    a: PILOT_OFFER.pricingAfter,
   },
   {
-    q: "Verilerim ve fişlerim güvende mi?",
-    a: "Kesinlikle. Tüm kullanıcı verileri şifreli olarak saklanır ve KVKK uyumlu çalışırız. İstediğiniz zaman hesabınızı ve tüm verilerinizi silebilirsiniz.",
+    q: "Başvuru için ödeme ya da taahhüt gerekiyor mu?",
+    a: "Hayır. Başvuru sırasında kredi kartı bilgisi istemiyoruz, kurulum ücreti almıyoruz ve süre taahhüdü yok. Pilottan istediğiniz an ayrılabilirsiniz.",
   },
   {
-    q: "Hangi işletmeler trinQ kullanıyor?",
-    a: "Kafe, restoran, fırın, market, kuaför ve daha birçok sektörden işletme trinQ ile sadakat programı sunuyor. Uygulama içindeki harita üzerinden yakınlardaki tüm anlaşmalı işletmeleri keşfedebilirsiniz.",
+    q: "Kurulum ne kadar sürüyor, teknik bilgi gerekiyor mu?",
+    a: "Teknik bilgi gerekmiyor. Panelinizi biz açıyoruz; menü, kampanya ve işletme bilgilerinizin yüklenmesini birlikte yapıyoruz. Yeni bir cihaz almanız ya da kasa sisteminizi değiştirmeniz gerekmiyor.",
   },
   {
-    q: "Kendi mobil uygulamamı geliştirmek yerine neden trinQ kullanmalıyım?",
-    a: "Kendi uygulamanızı geliştirmek hem yüksek maliyetli hem de teknik bilgi gerektirir. trinQ ise hiçbir teknik altyapı gerektirmeden, anında kullanıma hazırdır. Ayrıca kullanıcılar tek bir uygulamada onlarca işletmeye erişebildiği için görünürlüğünüz katlanarak artar.",
+    q: "Kasada ne değişiyor? Personelim nasıl kullanacak?",
+    a: "Kasada görünür bir QR kod duruyor. Müşteri ödeme sonrası bu QR'ı uygulamasıyla okutuyor, damga ve kampanya kullanımı otomatik işleniyor. Personelin ek bir işlem yapması gerekmiyor.",
   },
   {
-    q: "İşletmem için nasıl kayıt olabilirim?",
-    a: "trinQ'ye abone olduktan sonra size özel bir işletme paneli açılır. Bu panelden markanızı, logo ve adres bilgilerinizi ekleyebilir, şubelerinizi tanımlayabilir, menüdeki ürünlerinizi yükleyebilir ve kampanyalarınızı oluşturabilirsiniz. Kurulum birkaç dakika sürer.",
+    q: "Hangi kampanyaları oluşturabilirim?",
+    a: "Dijital damga kartı (ör. “10 kahve alana 1 ücretsiz”) ile genel, öğrenci, hoş geldin ve doğum günü kampanyaları oluşturabilirsiniz. Her kampanyada indirim oranı, tarih aralığı ve kullanım limiti belirleyebilirsiniz.",
   },
   {
-    q: "Kampanya türleri nelerdir?",
-    a: "trinQ paneli üzerinden genel kampanyalar, öğrenci kampanyaları, hoş geldin kampanyaları ve doğum günü kampanyaları oluşturabilirsiniz. Tarih aralığı, kullanım limiti ve hedef kitle gibi detayları esnek bir şekilde ayarlayabilirsiniz.",
+    q: "Kampanyamı sonradan değiştirebilir ya da durdurabilir miyim?",
+    a: "Evet. Kampanyaları panelden dilediğiniz zaman düzenleyebilir, yayından kaldırabilir veya yeniden başlatabilirsiniz. Baskı, tasarım ya da onay süreci beklemeniz gerekmez.",
   },
   {
     q: "Birden fazla şubem var, hepsini yönetebilir miyim?",
-    a: "Evet. trinQ paneli üzerinden tüm şubelerinizi tek ekrandan yönetebilir, kampanyalarınızı ayrı ayrı veya topluca planlayabilirsiniz.",
+    a: "Evet. Şubelerinizi ayrı ayrı tanımlıyoruz; kampanyalarınızı tek bir şubeye veya tümüne birlikte uygulayabilirsiniz.",
   },
   {
-    q: "Aboneliğimi istediğim zaman iptal edebilir miyim?",
-    a: "Elbette. Aboneliğinizi dilediğiniz zaman iptal edebilirsiniz. Herhangi bir cayma bedeli veya gizli ücret yoktur.",
+    q: "Kendi mobil uygulamamı geliştirmek yerine neden trinQ?",
+    a: "Kendi uygulamanızı geliştirmek yüksek maliyet, teknik ekip ve sürekli bakım gerektirir; ayrıca müşterilerinizi o uygulamayı indirmeye ikna etmeniz gerekir. trinQ'da panel hazır, uygulama yayında ve kullanıcı tabanı ortak — tek uygulamada çevresindeki tüm işletmeleri gezen bir kullanıcı sizi de görür.",
+  },
+  {
+    q: "Müşteri verileri kime ait, KVKK uyumlu mu?",
+    a: "Veriler KVKK kapsamında, aydınlatma ve açık rıza metinlerimizde belirtilen esaslara göre işlenir. Müşteri verilerini üçüncü taraflara satmıyoruz. Ayrıntılar için KVKK Aydınlatma Metni ve Gizlilik Politikası sayfalarımıza bakabilirsiniz.",
+  },
+  {
+    q: "İstediğim zaman ayrılabilir miyim?",
+    a: "Evet. Cayma bedeli ya da gizli ücret yok. Ayrılmak istediğinizde işletme sayfanızı ve kampanyalarınızı yayından kaldırıyoruz.",
   },
 ];
 
-export default function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+const USER_FAQ: { q: string; a: string }[] = [
+  {
+    q: "trinQ nedir?",
+    a: "trinQ, çevrendeki kafe ve restoranların kampanyalarını tek yerde gösteren ve bu mekânlarda damga biriktirmeni sağlayan bir uygulamadır. Karton damga kartı yerine kartların telefonunda durur.",
+  },
+  {
+    q: "Uygulama ücretli mi?",
+    a: "Hayır. trinQ kullanıcılar için tamamen ücretsizdir; kampanyalardan yararlanmak için herhangi bir ödeme yapman gerekmez.",
+  },
+  {
+    q: "Damga ve ödül nasıl kazanılır?",
+    a: "Anlaşmalı işletmelerde alışveriş yaptıktan sonra kasadaki QR kodu okutarak veya 6 haneli kodu girerek damga kazanırsın. Her işletmenin ödül kuralları uygulama içinde açıkça belirtilir.",
+  },
+  {
+    q: "Hangi işletmeler trinQ kullanıyor?",
+    a: "trinQ yeme-içme işletmelerine odaklanıyor: kafeler, restoranlar, kahveciler, brunch mekânları, pastaneler ve fırınlar. Uygulamadaki harita üzerinden yakınındaki anlaşmalı mekânları keşfedebilirsin.",
+  },
+  {
+    q: "Öğrenci kampanyaları nasıl çalışıyor?",
+    a: "Bazı işletmeler yalnızca öğrencilere yönelik kampanyalar tanımlıyor. Bu kampanyalar uygulamada ayrıca etiketlenir; kullanım koşulları kampanya detayında yazar.",
+  },
+  {
+    q: "Verilerim güvende mi?",
+    a: "Tüm kullanıcı verileri şifreli olarak saklanır ve KVKK uyumlu çalışırız. İstediğin zaman hesabını ve tüm verilerini silebilirsin.",
+  },
+];
+
+export default function FAQSection({
+  audience = "business",
+}: {
+  audience?: Audience;
+}) {
+  const items = audience === "business" ? BUSINESS_FAQ : USER_FAQ;
+  const [open, setOpen] = useState<string | null>(items[0].q);
 
   return (
-    <section className="bg-white py-20 sm:py-24 lg:py-28" id="sss">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5 }}
-        >
-          <h2 className="text-3xl font-bold text-trinq-navy sm:text-4xl">
-            Sıkça Sorulan Sorular
-          </h2>
-          <p className="mt-4 text-lg text-trinq-muted/90">
-            Merak ettiklerinizin yanıtları burada.
-          </p>
-        </motion.div>
+    <Section id="sss" tone="paper">
+      <SectionHeading
+        eyebrow="S.S.S."
+        title="Sıkça sorulan sorular"
+        subtitle={
+          audience === "business"
+            ? "Ücretlendirme, kurulum, kampanya yönetimi ve pilot sonrasıyla ilgili bilmek isteyebileceğiniz her şey."
+            : "Uygulamayla ilgili merak ettiklerinin yanıtları burada."
+        }
+      />
 
-        <div className="mt-12 space-y-3">
-          {FAQ_ITEMS.map((item, i) => (
-            <motion.div
-              key={item.q}
-              className="overflow-hidden rounded-[24px] border border-trinq-accent/20 bg-white"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.04 }}
-            >
-              <button
-                type="button"
-                className="flex w-full items-center justify-between px-6 py-4 text-left font-medium text-trinq-navy transition hover:bg-trinq-accent/5"
-                onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                aria-expanded={openIndex === i}
-              >
-                <span>{item.q}</span>
-                <motion.span
-                  animate={{ rotate: openIndex === i ? 180 : 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <ChevronDown className="h-5 w-5 text-trinq-muted/80" />
-                </motion.span>
-              </button>
-              <AnimatePresence initial={false}>
-                {openIndex === i && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className="border-t border-trinq-accent/10"
+      <div className="mx-auto mt-10 max-w-3xl sm:mt-12">
+        <div className="overflow-hidden rounded-[22px] border border-trinq-line bg-white shadow-[var(--shadow-sm)]">
+          {items.map((item, i) => {
+            const isOpen = open === item.q;
+            return (
+              <div key={item.q} className={i > 0 ? "border-t border-trinq-line" : ""}>
+                <h3>
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left transition-colors hover:bg-trinq-navy-soft/50 sm:px-7"
+                    onClick={() => setOpen(isOpen ? null : item.q)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-panel-${i}`}
                   >
-                    <p className="px-6 py-4 text-trinq-muted/90">{item.a}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
+                    <span className="text-[15px] font-bold tracking-tight text-trinq-navy sm:text-base">
+                      {item.q}
+                    </span>
+                    <motion.span
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-trinq-navy-soft text-trinq-navy"
+                      animate={{ rotate: isOpen ? 45 : 0 }}
+                      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <Plus size={16} strokeWidth={2.4} />
+                    </motion.span>
+                  </button>
+                </h3>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      id={`faq-panel-${i}`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <p className="t-body px-5 pb-6 pr-12 text-trinq-muted sm:px-7 sm:pr-16">
+                        {item.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
         </div>
 
-        {/* CTA: Başka soruları olan kullanıcılar için */}
-        <motion.div
-          className="mt-10 text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-        >
-          <p className="text-base text-trinq-muted/80">
-            Başka bir sorunuz mu var?{" "}
-            <Link
-              href="mailto:info@trinq.app"
-              className="font-bold text-trinq-accent transition hover:text-trinq-accent-hover hover:underline"
+        <Reveal variant="up" delay={0.1} className="mt-8 text-center">
+          <p className="t-body text-trinq-muted">
+            Cevabını bulamadığınız bir soru mu var?{" "}
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="font-bold text-trinq-navy underline decoration-trinq-gold decoration-2 underline-offset-4 transition-colors hover:text-trinq-navy-mid"
             >
-              Bize ulaşın →
-            </Link>
+              Bize yazın
+            </a>
           </p>
-        </motion.div>
+        </Reveal>
       </div>
-    </section>
+    </Section>
   );
 }

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Wifi, Plug, TreePine, Heart, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import PartnerMerchantsMap from "@/components/PartnerMerchantsMap";
+import PhoneFrame from "@/components/ui/PhoneFrame";
 
 const BADGES = [
   { icon: Wifi, label: "Wifi" },
@@ -221,18 +222,14 @@ export default function StoresSection() {
               whileHover={{ y: -6 }}
               transition={{ type: "tween", duration: 0.2, ease: "easeOut" }}
             >
-              <div className="relative overflow-hidden rounded-[40px] border-[8px] border-zinc-800 bg-zinc-900 shadow-2xl sm:rounded-[52px] sm:border-[10px]">
-                <div
-                  className="relative flex w-full items-center justify-center overflow-hidden rounded-[32px] bg-black sm:rounded-[42px]"
-                  style={{ aspectRatio: "390/844" }}
-                >
-                  <img
-                    src="/magazalar-ekran.png"
-                    alt="trinQ İşletmeler ekranı"
-                    className="h-full w-full object-contain object-center"
-                  />
-                </div>
-              </div>
+              <PhoneFrame className="w-full">
+                <img
+                  src="/app-magazalar-liste.webp"
+                  alt="trinQ İşletmeler ekranı: anlaşmalı mekânların listesi"
+                  className="h-full w-full object-cover object-center"
+                  loading="lazy"
+                />
+              </PhoneFrame>
             </motion.div>
           </motion.div>
         </div>

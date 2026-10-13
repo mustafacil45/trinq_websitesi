@@ -1,36 +1,109 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   trinQ — tasarım token'ları
+   Marka: derin yeşil + altın vurgu + krem. Siyah vurgu kaldırıldı:
+   siyah butonlar yeşil başlıklarla çakışıyor ve siteyi dağınık gösteriyordu.
+   ========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #1e293b;
-  /* trinQ: derin yeşil + sade siyah vurgu (gri-mavi ton yok) */
+  /* --- marka yeşili --- */
   --trinq-navy: #11392e;
   --trinq-navy-deep: #0c251e;
-  --trinq-accent: #000000;
-  --trinq-accent-hover: #171717;
-  --trinq-accent-light: #2e2e2e;
-  --trinq-muted: #475569;
+  --trinq-navy-darkest: #081c16;
+  --trinq-navy-mid: #244f42;
+  --trinq-navy-soft: #eef5f2;
+
+  /* --- vurgu: marka yeşili (eski: #000000) --- */
+  --trinq-accent: #11392e;
+  --trinq-accent-hover: #0c251e;
+  --trinq-accent-light: #244f42;
+
+  /* --- altın: ödül / öne çıkan an --- */
+  --trinq-gold: #c8a34a;
+  --trinq-gold-soft: #e3c779;
+  --trinq-gold-bright: #f0d98f;
+
+  /* --- metin --- */
+  --foreground: #0f211b;
+  --trinq-ink: #0f211b;
+  --trinq-muted: #55665f;
+
+  /* --- yüzeyler --- */
+  --background: #ffffff;
   --trinq-bg: #ffffff;
+  /* Eskiden #f6f9f7 idi: beyazdan farkı ~%1.5, yani gözle ayırt edilmiyordu.
+     "Bölümler dönüşümlü zemin" fikri kodda vardı ama ekranda sayfa yine tek
+     bir beyaz blok gibi okunuyordu. Marka yeşiline doğru belirgin biçimde
+     kaydırıldı — hâlâ yumuşak, ama artık ayrım görünüyor. */
+  --trinq-paper: #eaf1ec;
+  --trinq-cream: #fdf8ec;
+  --trinq-line: rgba(17, 57, 46, 0.1);
+
+  /* --- geriye dönük uyumluluk (eski sınıf adları) --- */
   --trinq-blue: var(--trinq-accent);
   --trinq-blue-light: var(--trinq-accent-light);
   --trinq-dark: var(--trinq-navy);
   --trinq-slate: var(--trinq-muted);
+
+  /* --- şekil --- */
   --radius-card: 24px;
-  --radius-button: 20px;
+  --radius-button: 999px;
+
+  /* --- gölge ölçeği (tek bir sistem) --- */
+  --shadow-xs: 0 1px 2px rgba(15, 33, 27, 0.04);
+  --shadow-sm: 0 2px 8px rgba(15, 33, 27, 0.05);
+  --shadow-md: 0 10px 30px -12px rgba(15, 33, 27, 0.14);
+  --shadow-lg: 0 24px 60px -28px rgba(15, 33, 27, 0.26);
+  --shadow-xl: 0 40px 90px -40px rgba(15, 33, 27, 0.34);
+
+  /* --- header yüksekliği (anchor scroll hesabı buna bağlı) --- */
+  --header-h: 72px;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --color-trinq-navy: #11392e;
   --color-trinq-navy-deep: #0c251e;
-  --color-trinq-accent: #000000;
-  --color-trinq-accent-hover: #171717;
-  --color-trinq-accent-light: #2e2e2e;
-  --color-trinq-ink: #1e293b;
-  --color-trinq-muted: #475569;
+  --color-trinq-navy-darkest: #081c16;
+  --color-trinq-navy-mid: #244f42;
+  --color-trinq-navy-soft: #eef5f2;
+
+  --color-trinq-accent: #11392e;
+  --color-trinq-accent-hover: #0c251e;
+  --color-trinq-accent-light: #244f42;
+
+  --color-trinq-gold: #c8a34a;
+  --color-trinq-gold-soft: #e3c779;
+  --color-trinq-gold-bright: #f0d98f;
+
+  --color-trinq-ink: #0f211b;
+  --color-trinq-muted: #55665f;
+  --color-trinq-paper: #eaf1ec;
+  --color-trinq-cream: #fdf8ec;
+  --color-trinq-line: rgba(17, 57, 46, 0.1);
+
   --font-sans: var(--font-heading), system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
   --font-mono: var(--font-geist-mono);
+}
+
+/* ==========================================================================
+   Temel
+   ========================================================================== */
+
+/*
+ * Yatay taşma koruması YALNIZCA <html> üzerinde.
+ * <body> veya <main> üzerine overflow-x koymak onları scroll container
+ * yapar ve `position: sticky` bölümleri (uygulama vitrini) bozar.
+ * <html>'in overflow'u viewport'a propagate olduğu için sticky'yi etkilemez.
+ */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -38,99 +111,300 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   line-height: 1.6;
+  width: 100%;
+  position: relative;
 }
 
-/* Premium Tech tipografi: başlıklar */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  text-wrap: balance;
 }
 
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
+p, li {
+  text-wrap: pretty;
 }
 
-body {
-  overflow-x: hidden;
-}
-
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-a,
-button,
-span,
-li {
+p, h1, h2, h3, h4, h5, h6, a, button, span, li {
   overflow-wrap: break-word;
 }
 
-/* Anchor linkler fixed header altında kalmasın */
-#anasayfa,
-#hakkimizda,
-#ozellikler,
-#iletisim,
-#sistem,
-#uygulama-vitrini,
-#dijital-devrim,
-#isletme-paneli,
-#isletmeler,
-#isletmeler-icin,
-#kullanicilar,
-#sss,
-#indir,
-#giris {
-  scroll-margin-top: 9rem;
+::selection {
+  background: var(--trinq-navy);
+  color: #fdf8ec;
 }
 
-@media (min-width: 1024px) {
+/* Klavye odağı — her yerde görünür ve tutarlı */
+:focus-visible {
+  outline: 2px solid var(--trinq-navy);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.on-dark :focus-visible {
+  outline-color: var(--trinq-gold-soft);
+}
 
-  #anasayfa,
-  #hakkimizda,
-  #ozellikler,
-  #iletisim,
-  #sistem,
-  #uygulama-vitrini,
-  #dijital-devrim,
-  #isletme-paneli,
-  #isletmeler,
-  #isletmeler-icin,
-  #kullanicilar,
-  #sss,
-  #indir,
-  #giris {
-    scroll-margin-top: 7rem;
+/* ==========================================================================
+   Akıcı tipografi ölçeği
+   ========================================================================== */
+
+.t-display {
+  font-size: clamp(2.25rem, 1.3rem + 4.2vw, 4.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  font-weight: 800;
+}
+.t-h2 {
+  font-size: clamp(1.75rem, 1.15rem + 2.4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+.t-h3 {
+  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+.t-lead {
+  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.25rem);
+  line-height: 1.6;
+}
+.t-body {
+  font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+  line-height: 1.65;
+}
+.t-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.t-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Altın gradyan metin */
+.t-gold {
+  background: linear-gradient(100deg, #f0d98f 0%, #d7b85d 48%, #efdca6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* ğ/y/g descender'ları kırpılmasın */
+  padding-bottom: 0.08em;
+}
+
+/* Büyük puntoda virgül/nokta boşluğu düzeltmesi */
+.t-pn {
+  margin-left: -0.05em;
+}
+
+/* ==========================================================================
+   Bölüm ritmi
+   ========================================================================== */
+
+.section {
+  position: relative;
+  padding-block: clamp(3.5rem, 2rem + 6vw, 7rem);
+}
+.section-tight {
+  padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+}
+
+.tone-light { background: #ffffff; }
+.tone-paper { background: var(--trinq-paper); }
+.tone-cream { background: var(--trinq-cream); }
+.tone-dark {
+  background:
+    radial-gradient(900px 620px at 85% 4%, rgba(227, 199, 121, 0.14) 0%, transparent 60%),
+    radial-gradient(900px 700px at 8% 96%, rgba(36, 79, 66, 0.9) 0%, transparent 62%),
+    linear-gradient(168deg, #0c251e 0%, #11392e 48%, #081c16 100%);
+  color: #f6f7ef;
+}
+
+/* Beyaz ↔ paper geçişlerinde ince ayraç */
+.edge-top { border-top: 1px solid var(--trinq-line); }
+
+/* ==========================================================================
+   Yüzeyler
+   ========================================================================== */
+
+.card {
+  background: #fff;
+  border: 1px solid var(--trinq-line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(17, 57, 46, 0.2);
+}
+
+.card-dark {
+  background: rgba(246, 247, 239, 0.06);
+  border: 1px solid rgba(246, 247, 239, 0.14);
+  border-radius: var(--radius-card);
+}
+
+/* ==========================================================================
+   Hareket / dekor
+   ========================================================================== */
+
+@keyframes trinq-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: trinq-marquee 38s linear infinite;
+  will-change: transform;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+@keyframes trinq-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.float-slow {
+  animation: trinq-float 7s ease-in-out infinite;
+}
+
+@keyframes trinq-pulse-ring {
+  0% { transform: scale(0.85); opacity: 0.55; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+.pulse-ring {
+  animation: trinq-pulse-ring 2.6s cubic-bezier(0.2, 0.75, 0.3, 1) infinite;
+}
+
+/* ==========================================================================
+   Scroll'a bağlı hareket (CSS scroll-driven animations)
+   --------------------------------------------------------------------------
+   `animation-timeline: view()` ile çalışır: animasyonun ilerlemesi zamana
+   değil, elemanın görünüm alanındaki konumuna bağlanır. Tamamen tarayıcı
+   tarafında, compositor üzerinde çalışır — JS yok, scroll listener yok,
+   hydration riski yok.
+
+   Desteklemeyen tarayıcılarda (@supports) hiçbir şey uygulanmaz; eleman
+   normal hâliyle durur. Hareket azaltma tercihinde de kapalıdır.
+
+   GOTCHA: `animation` kısayolu `animation-timeline`'ı sıfırlar. Bu yüzden
+   timeline/range HER ZAMAN kısayoldan SONRA yazılır.
+   ========================================================================== */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* --- yumuşak parallax: eleman görünürken ters yönde süzülür --- */
+    @keyframes sd-parallax {
+      from { translate: 0 var(--sd-from, 26px); }
+      to   { translate: 0 var(--sd-to, -26px); }
+    }
+    .sd-parallax {
+      animation: sd-parallax linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+
+    /* --- görsel girerken hafifçe yerine oturur --- */
+    @keyframes sd-zoom {
+      from { scale: var(--sd-zoom, 1.07); }
+      to   { scale: 1; }
+    }
+    .sd-zoom {
+      animation: sd-zoom linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 42%;
+    }
+
+    /* --- çizgi kendini çizer --- */
+    @keyframes sd-draw {
+      from { scale: 0 1; }
+      to   { scale: 1 1; }
+    }
+    .sd-draw-x {
+      animation: sd-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 35% cover 38%;
+    }
+
+    /* --- yatay şerit scroll ile kayar (marquee'nin üstüne biner) --- */
+    @keyframes sd-drift {
+      from { translate: var(--sd-dx, 2.5%) 0; }
+      to   { translate: calc(-1 * var(--sd-dx, 2.5%)) 0; }
+    }
+    .sd-drift-x {
+      animation: sd-drift linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
   }
 }
 
-/* Carousel: scrollbar gizle */
+/* Çok ince grain — düz gradyanlardaki banding'i kırar */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   Anchor linkler sabit header altında kalmasın
+   ========================================================================== */
+
+[id] {
+  scroll-margin-top: calc(var(--header-h) + 24px);
+}
+
+/* ==========================================================================
+   Yardımcılar
+   ========================================================================== */
+
 .scrollbar-hide {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 
-/* Erişilebilirlik: hareket azaltma tercihi */
-@media (prefers-reduced-motion: reduce) {
+/* Yatay kaydırmalı sıralarda kenarlardan nefes payı */
+.edge-pad {
+  scroll-padding-inline: 1rem;
+}
 
-  *,
-  *::before,
-  *::after {
+/* ==========================================================================
+   Erişilebilirlik: hareket azaltma
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  /* Scroll'a bağlı parallax/ölçek dönüşümleri framer'ın animasyon
+     sistemi dışında kaldığı için ayrıca kapatılıyor. */
+  [data-parallax] {
+    transform: none !important;
+  }
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+  .marquee-track { animation: none; }
 }

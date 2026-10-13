@@ -1,72 +1,102 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Coffee, UtensilsCrossed, Cake, Sparkles, Scissors, Gem, Dumbbell, MoreHorizontal } from "lucide-react";
+import {
+  Coffee,
+  UtensilsCrossed,
+  Cake,
+  Croissant,
+  Pizza,
+  CupSoda,
+  EggFried,
+  ChefHat,
+} from "lucide-react";
+import { Section, SectionHeading } from "./ui/Section";
 
+/**
+ * Yalnızca kafe & restoran dünyası.
+ * (Kuaför, güzellik merkezi, spor salonu gibi hizmet işletmeleri kaldırıldı.)
+ */
 const SECTORS = [
   { icon: Coffee, label: "Kafe" },
   { icon: UtensilsCrossed, label: "Restoran" },
+  { icon: CupSoda, label: "Kahveci" },
+  { icon: EggFried, label: "Brunch" },
   { icon: Cake, label: "Tatlı & Pastane" },
-  { icon: Sparkles, label: "Güzellik Merkezi" },
-  { icon: Scissors, label: "Kuaför" },
-  { icon: Gem, label: "Nail Studio" },
-  { icon: Dumbbell, label: "Spor Salonu" },
-  { icon: MoreHorizontal, label: "Ve Daha Fazlası" },
+  { icon: Croissant, label: "Fırın" },
+  { icon: Pizza, label: "Burger & Pizza" },
+  { icon: ChefHat, label: "Ocakbaşı & Kebap" },
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.07 } },
-};
-
-const item = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.35 } },
-};
-
-export default function SectorsSection() {
+function Chip({ icon: Icon, label }: { icon: typeof Coffee; label: string }) {
   return (
-    <section className="bg-white py-14 sm:py-20 lg:py-28" id="sektorler">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="text-sm font-bold uppercase tracking-widest text-trinq-accent">
-            SEKTÖRLER
-          </span>
-          <h2 className="mt-3 text-3xl font-bold leading-tight text-trinq-navy sm:text-4xl">
-            Her İşletme Türüne Uygun
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-trinq-muted/90 sm:text-lg">
-            Kafe, restoran, güzellik merkezi ve daha fazlası. trinQ her sektörün sadakat ihtiyacına yanıt verir.
-          </p>
-        </motion.div>
+    <div className="flex shrink-0 items-center gap-3 rounded-full border border-trinq-line bg-white px-5 py-3.5 shadow-[var(--shadow-xs)]">
+      <Icon size={19} strokeWidth={1.8} className="shrink-0 text-trinq-navy-mid" />
+      <span className="whitespace-nowrap text-[15px] font-semibold tracking-tight text-trinq-navy">
+        {label}
+      </span>
+    </div>
+  );
+}
 
-        <motion.div
-          className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:grid-cols-4 sm:gap-4 lg:grid-cols-8 lg:gap-5"
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-40px" }}
-        >
-          {SECTORS.map((s) => (
-            <motion.div
-              key={s.label}
-              variants={item}
-              className="group flex min-h-[126px] flex-col items-center justify-center gap-3 rounded-2xl border border-slate-100 bg-white p-4 text-center shadow-sm transition-all hover:border-trinq-accent/25 hover:shadow-md sm:p-6"
-            >
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-50 transition-colors group-hover:bg-trinq-accent/10">
-                <s.icon className="h-7 w-7 text-trinq-navy transition-colors group-hover:text-trinq-accent" strokeWidth={1.5} />
+export default function SectorsSection({
+  audience = "business",
+}: {
+  audience?: "business" | "user";
+}) {
+  const isBusiness = audience === "business";
+
+  return (
+    <Section id="sektorler" tone="light">
+      <SectionHeading
+        eyebrow={isBusiness ? "Kimler için" : "Nerelerde geçerli"}
+        title={
+          isBusiness
+            ? "Kafeler ve restoranlar için kuruldu"
+            : "Yeme-içme mekânlarında geçerli"
+        }
+        subtitle={
+          isBusiness
+            ? "Müşterisi geri gelen her yeme-içme işletmesi trinQ ile çalışır. Köşedeki kahveciden çok şubeli zincire kadar."
+            : "trinQ yeme-içme mekânlarına odaklanıyor. Uygulamadaki haritadan yakınındaki anlaşmalı yerleri görebilirsin."
+        }
+      />
+
+      {/* Kesintisiz akan şerit — mobilde sıkışık ızgara yerine akıcı bir ritim */}
+      {/*
+        İki katman: dıştaki `.sd-drift-x` scroll'a bağlı yatay kayma,
+        içteki `.marquee-track` kendi kendine akan sonsuz şerit. Üst üste
+        binince şerit scroll ederken hızlanıyor, dururken sakin akıyor.
+      */}
+      <div className="marquee-mask group relative mt-12 overflow-hidden sm:mt-16">
+        <div className="sd-drift-x" style={{ "--sd-dx": "3%" } as React.CSSProperties}>
+          <div className="marquee-track flex w-max gap-3 group-hover:[animation-play-state:paused] sm:gap-4">
+            {[0, 1].map((dup) => (
+              <div key={dup} className="flex shrink-0 gap-3 sm:gap-4" aria-hidden={dup === 1}>
+                {SECTORS.map((s) => (
+                  <Chip key={`${dup}-${s.label}`} icon={s.icon} label={s.label} />
+                ))}
               </div>
-              <span className="text-sm font-medium text-trinq-navy">{s.label}</span>
-            </motion.div>
-          ))}
-        </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
-    </section>
+
+      <div className="marquee-mask group relative mt-3 overflow-hidden sm:mt-4" aria-hidden>
+        <div className="sd-drift-x" style={{ "--sd-dx": "-3%" } as React.CSSProperties}>
+          <div
+            className="marquee-track flex w-max gap-3 group-hover:[animation-play-state:paused] sm:gap-4"
+            style={{ animationDirection: "reverse", animationDuration: "46s" }}
+          >
+            {[0, 1].map((dup) => (
+              <div key={dup} className="flex shrink-0 gap-3 sm:gap-4">
+                {[...SECTORS].reverse().map((s) => (
+                  <Chip key={`r-${dup}-${s.label}`} icon={s.icon} label={s.label} />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Section>
   );
 }

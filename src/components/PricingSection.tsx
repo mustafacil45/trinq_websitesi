@@ -1,154 +1,135 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight, BadgeCheck, Check, Clock3, LineChart, Rocket, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Check, Rocket, LineChart, ShieldCheck } from "lucide-react";
+import { Section, SectionHeading } from "./ui/Section";
+import { Reveal, Stagger, StaggerItem } from "./ui/Reveal";
+import { useBusinessLeadModal } from "@/context/BusinessLeadModalContext";
+import { PILOT_OFFER } from "@/lib/constants";
 
+/**
+ * ⚠️ BU BÖLÜM YAYINDA DEĞİL — yerine <PilotSection /> kullanılıyor.
+ *
+ * Bölümün adı "Fiyatlandırma" ama içinde hiç fiyat yoktu; yalnızca süresi
+ * geçmiş "Haziran'a özel 6 ay ücretsiz" kampanyası vardı. Teklif tek bir
+ * kaynağa (lib/constants.ts → PILOT_OFFER) taşındı ve pilot programı
+ * koşullarıyla birlikte PilotSection'da anlatılıyor.
+ *
+ * Gerçek fiyat listesi (paketler, tutarlar) netleştiğinde bu dosya bir
+ * fiyatlandırma tablosuna dönüştürülüp ana sayfaya geri takılabilir:
+ * <PilotSection /> ile <AboutSection /> arasına koymak ve Header/Footer'a
+ * "Fiyatlandırma" bağlantısını eklemek yeterli.
+ */
 const BENEFITS = [
-  "Kurulum ücretsiz, anında başlayın",
-  "6 ay boyunca tüm özelliklere erişim",
+  ...PILOT_OFFER.includes,
   "Taahhüt yok, istediğiniz zaman çıkabilirsiniz",
-  "Kampanyalarınızı anında yayınlayın",
-  "Dijital damga kart sistemini aktif edin",
+  "Komisyon yok, sabit aylık abonelik",
 ];
 
-const ACTION_CARDS = [
+const SIDE_CARDS = [
   {
     icon: Rocket,
-    title: "🚀 Hemen Başlayın",
+    title: "Hemen başlayın",
     desc: "Dakikalar içinde işletmenizi sisteme ekleyin.",
   },
   {
     icon: LineChart,
-    title: "📈 Müşterilere Ulaşın",
+    title: "Müşterilere ulaşın",
     desc: "Yakınınızdaki kullanıcılar kampanyalarınızı keşfetsin.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Taahhütsüz",
+    desc: "Gizli ücret ya da cayma bedeli yok.",
   },
 ];
 
 export default function PricingSection() {
+  const { openBusinessLeadModal } = useBusinessLeadModal();
+
   return (
-    <section
-      className="relative overflow-hidden bg-white py-14 sm:py-20 lg:py-28"
-      id="fiyatlandirma"
-    >
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="text-sm font-bold uppercase tracking-widest text-trinq-accent">
-            FİYATLANDIRMA
-          </span>
-          <h2 className="mx-auto mt-3 max-w-3xl text-3xl font-bold leading-tight text-trinq-navy sm:text-4xl">
-            Haziran’a Özel: 6 Ay Ücretsiz Kullanın
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-trinq-muted/90 sm:text-lg">
-            Sınırlı süreli fırsat. Şimdi katılın, trinQ’nun tüm özelliklerini 6 ay boyunca ücretsiz deneyimleyin.
-          </p>
-        </motion.div>
+    <Section id="fiyatlandirma" tone="dark">
+      <SectionHeading
+        tone="dark"
+        eyebrow="Fiyatlandırma"
+        title={
+          <>
+            Önce deneyin, <span className="t-gold">pilot ücretsiz.</span>
+          </>
+        }
+        subtitle="Pilot programa katılan işletmeler trinQ'yu hiçbir ücret ödemeden kullanır."
+      />
 
-        <motion.div
-          className="mx-auto mt-10 grid max-w-6xl gap-5 sm:mt-14 sm:gap-6 lg:grid-cols-[1.35fr_0.75fr]"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="relative overflow-hidden rounded-[24px] border border-trinq-accent/15 bg-white p-5 shadow-[0_24px_70px_-36px_rgba(17,57,46,0.45)] sm:rounded-[28px] sm:p-10 lg:p-12">
-            <div className="absolute right-0 top-0 h-44 w-44 translate-x-10 -translate-y-10 rounded-full bg-trinq-accent/10 blur-2xl" />
+      <div className="mt-12 grid gap-5 sm:mt-16 lg:grid-cols-[1.4fr_0.8fr]">
+        {/* Ana teklif kartı */}
+        <Reveal variant="up">
+          <div className="relative h-full overflow-hidden rounded-[26px] bg-trinq-cream p-6 text-trinq-navy shadow-[0_40px_90px_-40px_rgba(0,0,0,0.7)] sm:rounded-[30px] sm:p-10 lg:p-12">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-trinq-gold/25 blur-3xl"
+            />
+
             <div className="relative">
-              <div className="inline-flex items-center gap-2 rounded-full border border-trinq-accent/20 bg-trinq-accent/10 px-3 py-2 text-xs font-bold text-trinq-navy sm:px-4 sm:text-sm">
-                <Clock3 size={16} className="text-trinq-accent" />
-                ⏳ Sınırlı Süre - Haziran Sonuna Kadar
-              </div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-trinq-navy/15 bg-trinq-navy/5 px-4 py-2 text-xs font-bold tracking-tight">
+                Pilot programa katılan işletmelere özel
+              </span>
 
-              <h3 className="mt-6 max-w-2xl text-2xl font-bold leading-tight text-trinq-navy sm:mt-7 sm:text-3xl lg:text-4xl">
-                Önce Deneyin, Üstelik 6 Ay Ücretsiz
+              <h3 className="mt-6 text-3xl font-extrabold leading-[1.08] tracking-tight sm:mt-7 sm:text-4xl lg:text-[2.75rem]">
+                Pilot dönem boyunca
+                <br />
+                tek kuruş ödemeyin.
               </h3>
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-trinq-muted/90 sm:text-lg">
-                Kampanyamıza katılan işletmeler, trinQ’nun tüm özelliklerini 6 ay boyunca hiçbir ücret ödemeden
-                kullanabilir.
-              </p>
 
-              <ul className="mt-7 grid gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-4">
+              <ul className="mt-8 grid gap-3.5 sm:grid-cols-2 sm:gap-4">
                 {BENEFITS.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm leading-relaxed text-trinq-muted/90">
-                    <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-trinq-accent text-white">
-                      <Check size={14} strokeWidth={2.5} />
-                    </div>
-                    <span>{item}</span>
+                  <li key={item} className="flex items-start gap-3 text-[15px] leading-snug">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-trinq-navy text-trinq-cream">
+                      <Check size={12} strokeWidth={3} />
+                    </span>
+                    <span className="text-trinq-navy/80">{item}</span>
                   </li>
                 ))}
               </ul>
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                <motion.a
-                  href="/#iletisim"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,var(--trinq-accent),#18B66C,var(--trinq-accent))] bg-[length:180%_180%] px-7 py-4 text-sm font-bold text-white shadow-[0_18px_35px_-18px_rgba(26,166,92,0.9)] transition-all hover:bg-[position:100%_50%] sm:w-auto"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
+                <button
+                  type="button"
+                  onClick={openBusinessLeadModal}
+                  className="group inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-trinq-navy px-8 text-[15px] font-bold text-trinq-cream shadow-[0_18px_40px_-20px_rgba(17,57,46,0.9)] transition-colors hover:bg-trinq-navy-deep"
                 >
-                  6 Ay Ücretsiz Başla <ArrowRight size={16} />
-                </motion.a>
-                <motion.a
+                  Ücretsiz başla
+                  <ArrowRight
+                    size={17}
+                    strokeWidth={2.2}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </button>
+                <Link
                   href="/#iletisim"
-                  className="inline-flex w-full items-center justify-center rounded-full border border-trinq-accent/25 bg-white px-7 py-4 text-sm font-bold text-trinq-navy shadow-sm transition hover:border-trinq-accent/50 hover:bg-trinq-accent/5 sm:w-auto"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-trinq-navy/20 px-8 text-[15px] font-semibold text-trinq-navy transition-colors hover:bg-trinq-navy/5"
                 >
-                  İletişime Geç
-                </motion.a>
+                  Önce konuşalım
+                </Link>
               </div>
-
-              <p className="mt-4 flex items-center gap-2 text-xs font-semibold text-trinq-muted/80">
-                <Clock3 size={14} className="text-trinq-accent" />
-                ⏱ Kampanya süresi sınırlıdır
-              </p>
             </div>
           </div>
+        </Reveal>
 
-          <div className="grid gap-4">
-            {ACTION_CARDS.map((card, index) => (
-              <motion.div
-                key={card.title}
-                className="rounded-[22px] border border-slate-100 bg-white p-5 shadow-[0_18px_50px_-34px_rgba(17,57,46,0.55)] transition hover:-translate-y-1 hover:border-trinq-accent/25 hover:shadow-[0_22px_58px_-32px_rgba(17,57,46,0.55)] sm:rounded-[24px] sm:p-6"
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.45, delay: index * 0.08 }}
-              >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-trinq-accent/10">
-                  <card.icon className="h-6 w-6 text-trinq-accent" strokeWidth={1.8} />
+        {/* Yan kartlar */}
+        <Stagger className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1" gap={0.09}>
+          {SIDE_CARDS.map((card) => (
+            <StaggerItem key={card.title}>
+              <div className="card-dark h-full p-5 sm:p-6">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-trinq-gold-soft/15 text-trinq-gold-soft">
+                  <card.icon size={21} strokeWidth={1.8} />
                 </div>
-                <h3 className="text-lg font-bold text-trinq-navy">{card.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-trinq-muted/90">{card.desc}</p>
-              </motion.div>
-            ))}
-
-            <motion.div
-              className="rounded-[22px] border border-trinq-accent/15 bg-trinq-navy p-5 text-white shadow-[0_22px_60px_-34px_rgba(17,57,46,0.65)] sm:rounded-[24px] sm:p-6"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.45, delay: 0.16 }}
-            >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
-                <BadgeCheck className="h-6 w-6 text-trinq-accent" strokeWidth={1.8} />
+                <h3 className="text-base font-bold tracking-tight text-[#f6f7ef]">{card.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-[#f6f7ef]/60">{card.desc}</p>
               </div>
-              <h3 className="text-lg font-bold">Detaylı Bilgi Alın</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/75">
-                Fiyatlandırma hakkında detaylı bilgi almak için bizimle iletişime geçebilirsiniz.
-              </p>
-              <div className="mt-5 flex items-center gap-2 text-xs font-semibold text-trinq-accent">
-                <Sparkles size={14} />
-                Haziran fırsatı aktif
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
+            </StaggerItem>
+          ))}
+        </Stagger>
       </div>
-    </section>
+    </Section>
   );
 }

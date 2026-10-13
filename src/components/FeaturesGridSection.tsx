@@ -1,92 +1,87 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Smartphone, LayoutDashboard, BarChart3, Building2, Zap, Bell } from "lucide-react";
+import {
+  Stamp,
+  LayoutDashboard,
+  Tags,
+  QrCode,
+  Building2,
+  Activity,
+} from "lucide-react";
+import { Section, SectionHeading } from "./ui/Section";
+import { Stagger, StaggerItem } from "./ui/Reveal";
 
+/**
+ * Panelde ŞU AN aktif olan özellikler.
+ *
+ * Eskiden burada "Müşteri bildirimleri — hedefli bildirimlerle müşterilerinizi
+ * tekrar davet edin" maddesi vardı; böyle bir hedefli bildirim aracı henüz
+ * yok, bu yüzden kaldırıldı. Yerine veritabanında karşılığı olan kampanya
+ * türleri geldi. Yeni bir özellik yayına girdiğinde buraya eklenmeli —
+ * bu liste "yol haritası" değil, "bugün kullanabileceklerin" listesidir.
+ */
 const FEATURES = [
   {
-    icon: Smartphone,
-    title: "Dijital Sadakat Sistemi",
-    desc: "Müşterileriniz, QR kod ile saniyeler içinde işletmelerin yayınladığı kampanyalardan yararlanır. Fiziksel kart kullanımına gerek kalmadan hızlı ve kesintisiz bir sadakat deneyimi sunarsınız.",
+    icon: Stamp,
+    title: "Dijital damga kartı",
+    desc: "Kaç damgada hangi ödül verileceğini sen belirlersin. Kart müşterinin telefonunda durur; yıpranmaz, kaybolmaz.",
+  },
+  {
+    icon: Tags,
+    title: "Kampanya türleri",
+    desc: "Genel, öğrenci, hoş geldin ve doğum günü kampanyaları. Tarih aralığı, indirim oranı ve kullanım limiti ayarlanabilir.",
+  },
+  {
+    icon: QrCode,
+    title: "Kasada QR ile kullanım",
+    desc: "Müşteri kasadaki QR'ı okutur, damga ve kampanya kullanımı anında işlenir. Ek cihaz ya da kasa entegrasyonu gerekmez.",
   },
   {
     icon: LayoutDashboard,
-    title: "Basit İşletme Paneli",
-    desc: "Kullanıcı dostu yönetim panelimiz sayesinde kampanyalarınızı, müşteri verilerinizi ve sadakat süreçlerinizi tek noktadan kolayca yönetin.",
+    title: "İşletme paneli",
+    desc: "Menü, kampanya, damga kartı ve işletme bilgilerini tek panelden yönetirsin. Kurulumu biz yapıyoruz.",
   },
   {
-    icon: BarChart3,
-    title: "Gerçek Zamanlı Takip",
-    desc: "Müşteri ziyaretleri, harcama alışkanlıkları ve kampanya performanslarını anlık verilerle takip edin. Kararlarınızı sezgilerle değil, verilerle alın.",
+    icon: Activity,
+    title: "Ziyaret ve kullanım takibi",
+    desc: "Kampanyanın kaç kez kullanıldığını, işlem ve ziyaret hareketlerini panelden görürsün.",
   },
   {
     icon: Building2,
-    title: "Çoklu Şube Desteği",
-    desc: "Birden fazla şubenizi tek bir panel üzerinden yönetin. Şubeler arası performansı karşılaştırın, operasyonel verimliliği artırın.",
-  },
-  {
-    icon: Zap,
-    title: "Özelleştirilebilir Kampanyalar",
-    desc: "İşletmenize özel sadakat kurguları oluşturun. \"10 kahve alana 1 ücretsiz\" veya \"500 TL harcamaya %10 indirim\" gibi kampanyalar dakikalar içinde tanımlayın.",
-  },
-  {
-    icon: Bell,
-    title: "Müşteri Bildirimleri",
-    desc: "Hedefli bildirimler ve özel teklifler ile müşterilerinizi tekrar işletmenize davet edin. Sadakati sürdürülebilir bir ilişkiye dönüştürün.",
+    title: "Çok şubeli işletmeler",
+    desc: "Şubelerini ayrı ayrı tanımlar, kampanyalarını şube bazında veya tümüne birlikte uygularsın.",
   },
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1 } },
-};
-
-const item = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.4 } },
-};
-
 export default function FeaturesGridSection() {
   return (
-    <section className="bg-white py-14 sm:py-20 lg:py-28" id="ozellikler">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="text-sm font-bold uppercase tracking-widest text-trinq-accent">
-            ÖZELLİKLER
-          </span>
-          <h2 className="mt-3 text-3xl font-bold leading-tight text-trinq-navy sm:text-4xl">
-            Neler Sunuyoruz?
-          </h2>
-        </motion.div>
+    <Section id="ozellikler" tone="paper">
+      <SectionHeading
+        eyebrow="Özellikler"
+        title="Panelde bugün kullanabileceklerin"
+        subtitle="Yol haritası değil, şu anda aktif olan özellikler. Yeni bir özellik yayına girdiğinde bu listeye ekliyoruz."
+      />
 
-        <motion.div
-          className="mt-10 grid gap-5 sm:mt-14 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3"
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-40px" }}
-        >
-          {FEATURES.map((f) => (
-            <motion.div
-              key={f.title}
-              variants={item}
-              className="group rounded-[20px] border border-slate-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-trinq-accent/20 hover:shadow-lg sm:p-7"
-            >
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-trinq-navy/5 transition-colors group-hover:bg-trinq-accent/10">
-                <f.icon className="h-6 w-6 text-trinq-navy transition-colors group-hover:text-trinq-accent" strokeWidth={1.5} />
+      <Stagger className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3" gap={0.07}>
+        {FEATURES.map((f) => (
+          <StaggerItem key={f.title}>
+            <div className="card card-hover group relative h-full overflow-hidden p-6 sm:p-7">
+              {/* hover'da beliren yumuşak ışık */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-trinq-navy/0 blur-2xl transition-colors duration-500 group-hover:bg-trinq-navy/[0.06]"
+              />
+              <div className="relative mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-trinq-navy-soft text-trinq-navy transition-colors duration-300 group-hover:bg-trinq-navy group-hover:text-trinq-cream">
+                <f.icon size={23} strokeWidth={1.8} />
               </div>
-              <h3 className="mb-2 text-lg font-bold text-trinq-navy">{f.title}</h3>
-              <p className="text-sm leading-relaxed text-trinq-muted/90">{f.desc}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
+              <h3 className="relative text-[17px] font-bold tracking-tight text-trinq-navy">
+                {f.title}
+              </h3>
+              <p className="t-body relative mt-2 text-trinq-muted">{f.desc}</p>
+            </div>
+          </StaggerItem>
+        ))}
+      </Stagger>
+    </Section>
   );
 }

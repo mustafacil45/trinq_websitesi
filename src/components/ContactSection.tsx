@@ -1,9 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Zap, Send } from "lucide-react";
+import { Mail, Zap, Send, Instagram } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { Section } from "./ui/Section";
+import { Reveal } from "./ui/Reveal";
+import { useBusinessLeadModal } from "@/context/BusinessLeadModalContext";
+import { CONTACT_EMAIL, INSTAGRAM_URL, PILOT_OFFER } from "@/lib/constants";
 
 /** Sadece rakamları al, en fazla 10 hane; TR cep: 5XX XXX XX XX */
 function formatTurkishMobileDisplay(raw: string) {
@@ -16,6 +20,7 @@ function formatTurkishMobileDisplay(raw: string) {
 }
 
 export default function ContactSection() {
+  const { openBusinessLeadModal } = useBusinessLeadModal();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -123,60 +128,99 @@ export default function ContactSection() {
     }
   }
 
+  const inputClass =
+    "min-h-[52px] w-full rounded-2xl border border-trinq-line bg-white px-4 py-3 text-base text-trinq-navy outline-none transition-all placeholder:text-trinq-muted/45 focus:border-trinq-navy/40 focus:ring-4 focus:ring-trinq-navy/8";
+
   return (
-    <section className="bg-white py-14 sm:py-20 lg:py-28" id="iletisim">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-          {/* Sol: Başlık + İletişim Bilgileri */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.45 }}
-          >
-            <h2 className="text-3xl font-bold leading-tight text-trinq-navy sm:text-4xl">
-              Bizimle İletişime Geçin
-            </h2>
-            <p className="mt-4 max-w-md text-base leading-relaxed text-trinq-muted/90 sm:text-lg">
-              İşletmenizi dijital çağa taşımaya hazır mısınız? Sorularınız, önerileriniz veya demo talepleriniz için bize ulaşın. Ekibimiz size en kısa sürede dönüş yapacaktır.
+    <Section id="iletisim" tone="light">
+      <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+        {/* Sol: Başlık + İletişim Bilgileri */}
+        <Reveal variant="up">
+          <span className="t-eyebrow inline-flex items-center gap-2 text-trinq-navy-mid">
+            <span aria-hidden className="h-px w-6 bg-trinq-navy-mid/40" />
+            İletişim
+          </span>
+          <h2 className="t-h2 mt-4 text-trinq-navy">
+            Önce konuşalım
+            <span className="t-serif text-trinq-navy-mid"> mı?</span>
+          </h2>
+          <p className="t-lead mt-5 max-w-md text-trinq-muted">
+            Başvurmadan önce sormak istediğiniz bir şey varsa yazın. Pilot koşulları,
+            kurulum ya da kampanya kurgusu — hepsini konuşabiliriz.
+          </p>
+
+          <div className="mt-9 space-y-4">
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="card card-hover flex items-center gap-4 p-4 sm:p-5"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-trinq-navy-soft text-trinq-navy">
+                <Mail size={19} strokeWidth={1.9} />
+              </span>
+              <span>
+                <span className="block text-sm font-bold text-trinq-navy">E-posta</span>
+                <span className="block text-sm text-trinq-muted [overflow-wrap:anywhere]">
+                  {CONTACT_EMAIL}
+                </span>
+              </span>
+            </a>
+
+            {/*
+              Eskiden burada "Ücretsiz deneme — 14 gün" yazıyordu, fiyatlandırma
+              bölümü ise "6 ay ücretsiz" diyordu. Artık tek teklif var ve metni
+              PILOT_OFFER'dan geliyor (bkz. lib/constants.ts).
+            */}
+            <Link href="/#pilot" className="card card-hover flex items-center gap-4 p-4 sm:p-5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-trinq-navy-soft text-trinq-navy">
+                <Zap size={19} strokeWidth={1.9} />
+              </span>
+              <span>
+                <span className="block text-sm font-bold text-trinq-navy">Ücretsiz pilot</span>
+                <span className="block text-sm text-trinq-muted">
+                  {PILOT_OFFER.shortNote} Koşulları gör →
+                </span>
+              </span>
+            </Link>
+
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card card-hover flex items-center gap-4 p-4 sm:p-5"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-trinq-navy-soft text-trinq-navy">
+                <Instagram size={19} strokeWidth={1.9} />
+              </span>
+              <span>
+                <span className="block text-sm font-bold text-trinq-navy">Instagram</span>
+                <span className="block text-sm text-trinq-muted">@trinqapptr</span>
+              </span>
+            </a>
+          </div>
+        </Reveal>
+
+        {/* Sağ: İletişim Formu */}
+        <Reveal variant="up" delay={0.08}>
+          <div className="rounded-[26px] border border-trinq-line bg-trinq-paper p-5 shadow-[var(--shadow-sm)] sm:p-8 lg:p-10">
+            <h3 className="text-xl font-bold tracking-tight text-trinq-navy">Soru sorun</h3>
+            {/*
+              İki form aynı sayfada duruyor (bu ve işletme başvuru modalı).
+              Hangisinin ne işe yaradığı yazılmazsa ziyaretçi başvurmak için
+              burayı doldurup bekliyordu — bu yüzden ayrım net belirtiliyor.
+            */}
+            <p className="mb-7 mt-1.5 text-sm text-trinq-muted">
+              Pilot başvurusu için{" "}
+              <button
+                type="button"
+                onClick={openBusinessLeadModal}
+                className="font-semibold text-trinq-navy underline decoration-trinq-gold decoration-2 underline-offset-2 transition-colors hover:text-trinq-navy-mid"
+              >
+                işletme başvuru formunu
+              </button>{" "}
+              kullanabilirsiniz. Diğer tüm sorularınız için burayı doldurun.
             </p>
 
-            <div className="mt-8 space-y-5 sm:mt-10 sm:space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-trinq-accent/10">
-                  <Mail size={20} className="text-trinq-accent" />
-                </div>
-                <div>
-                  <p className="font-semibold text-trinq-navy">E-posta</p>
-                  <p className="text-sm text-trinq-muted">info@trinqapp.com</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-trinq-accent/10">
-                  <Zap size={20} className="text-trinq-accent" />
-                </div>
-                <div>
-                  <p className="font-semibold text-trinq-navy">Ücretsiz Demo</p>
-                  <p className="text-sm text-trinq-muted">Sistemi 14 gün boyunca ücretsiz deneyin</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Sağ: İletişim Formu */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.45 }}
-          >
-            <div className="rounded-[22px] border border-slate-100 bg-[#FAFBFC] p-5 shadow-sm sm:rounded-[24px] sm:p-10">
-              <h3 className="mb-2 text-xl font-bold text-trinq-navy">Bize Ulaşın</h3>
-              <p className="mb-8 text-sm text-trinq-muted/80">
-                Sorularınız için aşağıdaki formu doldurabilirsiniz.
-              </p>
-
-              <form className="space-y-5" onSubmit={onSubmit} noValidate>
+            <form className="space-y-5" onSubmit={onSubmit} noValidate>
                 <div>
                   <label className="mb-1.5 block text-sm font-semibold text-trinq-navy" htmlFor="contact-name">
                     Adınız Soyadınız
@@ -187,7 +231,7 @@ export default function ContactSection() {
                     placeholder="Ahmet Yılmaz"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="min-h-12 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10 sm:text-sm"
+                    className={inputClass}
                   />
                 </div>
                 <div>
@@ -200,7 +244,7 @@ export default function ContactSection() {
                     placeholder="ornek@sirket.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="min-h-12 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10 sm:text-sm"
+                    className={inputClass}
                   />
                 </div>
                 <div>
@@ -208,7 +252,7 @@ export default function ContactSection() {
                     Cep Telefonu
                   </label>
                   <div className="flex gap-2">
-                    <span className="flex min-h-12 items-center rounded-xl border border-gray-200 bg-white px-3 text-sm text-trinq-muted">
+                    <span className="flex min-h-[52px] shrink-0 items-center rounded-2xl border border-trinq-line bg-white px-4 text-sm font-medium text-trinq-muted">
                       +90
                     </span>
                     <input
@@ -219,7 +263,7 @@ export default function ContactSection() {
                       placeholder="5XX XXX XX XX"
                       value={phone}
                       onChange={(e) => setPhone(formatTurkishMobileDisplay(e.target.value))}
-                      className="min-h-12 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10 sm:text-sm"
+                      className={inputClass}
                     />
                   </div>
                 </div>
@@ -233,19 +277,19 @@ export default function ContactSection() {
                     placeholder="Mesajınızı buraya yazın..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="min-h-[128px] w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-trinq-navy outline-none transition-all focus:border-trinq-accent focus:ring-4 focus:ring-trinq-accent/10 sm:text-sm"
+                    className={`${inputClass} min-h-[132px] resize-none`}
                   />
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-3">
                   <input
                     id="kvkk-consent"
                     type="checkbox"
                     checked={consent}
                     onChange={(e) => setConsent(e.target.checked)}
-                    className="mt-1 h-4 w-4 rounded border-gray-300 text-trinq-accent focus:ring-trinq-accent"
+                    className="mt-0.5 h-[18px] w-[18px] shrink-0 cursor-pointer rounded border-trinq-line text-trinq-navy accent-[#11392e]"
                   />
-                  <label htmlFor="kvkk-consent" className="text-xs leading-relaxed text-trinq-muted">
-                    <Link href="/kvkk" className="font-semibold text-trinq-accent hover:underline">
+                  <label htmlFor="kvkk-consent" className="cursor-pointer text-xs leading-relaxed text-trinq-muted">
+                    <Link href="/kvkk" className="font-semibold text-trinq-navy underline decoration-trinq-gold decoration-2 underline-offset-2 hover:text-trinq-navy-mid">
                       Kişisel Verilerin Korunması Politikası
                     </Link>
                     &apos;nı okudum ve kişisel verilerimin işlenmesine onay veriyorum.
@@ -267,17 +311,16 @@ export default function ContactSection() {
                 <motion.button
                   type="submit"
                   disabled={submitting}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-trinq-accent py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-trinq-accent-hover disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex min-h-[54px] w-full items-center justify-center gap-2 rounded-full bg-trinq-navy text-[15px] font-bold text-trinq-cream shadow-[0_16px_40px_-20px_rgba(17,57,46,0.9)] transition-colors hover:bg-trinq-navy-deep disabled:cursor-not-allowed disabled:opacity-60"
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
                   {submitting ? "Gönderiliyor..." : "Gönder"} <Send size={16} />
                 </motion.button>
-              </form>
-            </div>
-          </motion.div>
-        </div>
+            </form>
+          </div>
+        </Reveal>
       </div>
-    </section>
+    </Section>
   );
 }

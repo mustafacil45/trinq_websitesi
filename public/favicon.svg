@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="trinQ">
+  <!--
+    trinQ favicon.
+    Sekme ikonu 16px'te okunmalı: ince çizgili, saydam zeminli logo orada
+    dağılıyordu. Bu yüzden marka yeşili dolu bir kare zemin + kalın krem "Q".
+    Q'nun kuyruğu altın: markanın "ödül" vurgusu.
+  -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#16452f" />
+      <stop offset="1" stop-color="#0c251e" />
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="url(#bg)" />
+
+  <g fill="none" stroke-linecap="round">
+    <!-- Q gövdesi -->
+    <circle cx="30" cy="29.5" r="15" stroke="#fdf8ec" stroke-width="8.5" />
+    <!-- Q kuyruğu — altın vurgu.
+         Kasenin İÇİNDEN başlayıp halkayı keser: "Q" ile büyüteç ikonunu
+         ayıran şey bu. Dışarıdan teğet geçen kuyruk arama ikonuna benziyor. -->
+    <path d="M34.5 34 L49 48.5" stroke="#e3c779" stroke-width="8" />
+  </g>
+</svg>

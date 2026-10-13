@@ -1,107 +1,162 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { QrCode, RefreshCw, Gift } from "lucide-react";
+import { Store, Stamp, QrCode, BarChart3 } from "lucide-react";
+import { Section } from "./ui/Section";
+import { Reveal, Stagger, StaggerItem } from "./ui/Reveal";
+import { useBusinessLeadModal } from "@/context/BusinessLeadModalContext";
+import PhoneFrame from "./ui/PhoneFrame";
 
+/**
+ * "trinQ nasıl çalışır?" — İŞLETME tarafından anlatım.
+ *
+ * Kullanıcı tarafındaki üç adım (QR okut → damga → ödül) silinmedi;
+ * UsersSection'da duruyor ve artık /kullanicilar sayfasında yayınlanıyor.
+ * Burada aynı akış işletmenin gözünden anlatılıyor: panelde ne yapıyorum,
+ * kasada ne oluyor, sonra neyi görüyorum.
+ *
+ * Adımların yanında GERÇEK işletme paneli ekran görüntüsü ve müşterinin
+ * telefonundaki gerçek uygulama ekranı duruyor — ürünün gerçekten çalıştığını
+ * göstermek güven için en etkili içerik.
+ */
 const STEPS = [
   {
+    icon: Store,
+    title: "İşletmeni panele ekle",
+    desc: "Logonu, adresini, menünü ve varsa şubelerini tek seferde tanımlarsın. Kurulumu biz yapıyoruz; teknik bilgi gerekmez.",
+  },
+  {
+    icon: Stamp,
+    title: "Damga kartını ve kampanyanı kur",
+    desc: "“10 kahve alana 1 ücretsiz” ya da “öğrenciye %20” — kuralı, tarih aralığını ve kullanım limitini panelden dakikalar içinde belirlersin.",
+  },
+  {
     icon: QrCode,
-    title: "Temas Kur: Tek Bir Okutma Yeterli.",
-    desc: "Kasada sadece QR kodunu okutman yeterli; geri kalanı trinQ halleder.",
+    title: "Müşteri kasada QR'ı okutur",
+    desc: "Damga ve kampanya kullanımı müşterinin telefonuna otomatik işlenir. Kasiyer için ekstra iş yükü, karton kart ya da yeni cihaz yok.",
   },
   {
-    icon: RefreshCw,
-    title: "Akış: Görünmez Teknoloji, Gerçek Veri.",
-    desc: "Harcaman, fişin ve damgaların anında uygulamana düşsün.",
-  },
-  {
-    icon: Gift,
-    title: "Ayrıcalık: Sana Özel Tasarlanan Ödüller.",
-    desc: "Sana özel kampanyalar ve ödüllerle alışverişten anında fayda sağla.",
+    icon: BarChart3,
+    title: "Panelden takip et",
+    desc: "Hangi kampanya kaç kez kullanıldı, kaç ziyaret geldi, hangi şube nasıl gidiyor — hepsi tek ekranda.",
   },
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
-
-const easing = [0.22, 1, 0.36, 1] as const;
-const item = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { duration: 0.45, ease: easing },
-  },
-};
-
 export default function HowItWorksSection() {
+  const { openBusinessLeadModal } = useBusinessLeadModal();
+
   return (
-    <section className="relative bg-white py-14 sm:py-20 lg:py-28" id="sistem">
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <h2 className="text-3xl font-semibold leading-tight tracking-tight text-trinq-navy sm:text-4xl" style={{ letterSpacing: "-0.02em" }}>
-            trinQ Ayrıcalığına 3 Adımda Katıl
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base text-[#1E293B]/90 sm:text-lg" style={{ lineHeight: 1.6 }}>
-            Üç adımda dijital sadakat: tek okutma, görünmez aktarım, sana özel ödüller.
-          </p>
-        </motion.div>
+    <Section id="nasil-calisir" tone="paper">
+      <div className="grid items-start gap-12 lg:grid-cols-[1fr_1.02fr] lg:gap-16">
+        {/* ---------------- Adımlar ---------------- */}
+        <div>
+          <Reveal variant="up">
+            <span className="t-eyebrow inline-flex items-center gap-2 text-trinq-navy-mid">
+              <span aria-hidden className="h-px w-6 bg-trinq-navy-mid/40" />
+              trinQ nasıl çalışır
+            </span>
+            <h2 className="t-h2 mt-4 text-trinq-navy">
+              Panelden kur, kasada okut,
+              <br />
+              müşterinin telefonunda{" "}
+              <span className="t-serif text-trinq-navy-mid">biriksin.</span>
+            </h2>
+            <p className="t-lead mt-5 max-w-lg text-trinq-muted">
+              Dört adım. Uygulama yazdırmana, cihaz almana ya da kasa sistemini
+              değiştirmene gerek yok.
+            </p>
+          </Reveal>
 
-        <motion.div
-          className="mt-10 grid grid-cols-1 gap-5 sm:mt-16 md:grid-cols-3 md:items-stretch lg:gap-10"
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-60px" }}
-        >
-          {STEPS.map((step, i) => (
-            <motion.div
-              key={step.title}
-              className="relative flex min-h-0 min-w-0"
-              variants={item}
-            >
-              {/* Glassmorphism kart: aynı genişlik/yükseklik — grid sütunları eşit */}
-              <motion.div
-                className="relative flex h-full min-h-[240px] w-full flex-col rounded-[24px] border border-white/60 bg-white/70 p-6 shadow-[0_8px_32px_-8px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:min-h-[320px] sm:p-8"
-                style={{ boxShadow: "0 8px 32px -8px rgba(15,23,42,0.08), 0 0 0 0.5px rgba(255,255,255,0.8)" }}
-                whileHover={{ y: -4, boxShadow: "0 20px 48px -12px rgba(15,23,42,0.12), 0 0 0 0.5px rgba(255,255,255,0.9)" }}
-                transition={{ type: "spring", stiffness: 300, damping: 24 }}
-              >
-                {/* Adım numarası: çok ince (200), büyük, arka planda hafif transparan */}
-                <span
-                  className="pointer-events-none absolute right-4 top-4 max-w-[45%] truncate text-right text-[clamp(3rem,10vw,5rem)] font-extralight leading-none text-trinq-navy/10 sm:right-6 sm:top-6 sm:max-w-none sm:text-[5rem]"
-                  style={{ fontWeight: 200 }}
-                  aria-hidden
+          <Stagger className="mt-9 flex flex-col gap-5" gap={0.1}>
+            {STEPS.map((s, i) => (
+              <StaggerItem key={s.title} className="flex items-start gap-4">
+                <div
+                  className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
+                    i === STEPS.length - 1
+                      ? "bg-[linear-gradient(145deg,#f0d98f,#c8a34a)] text-trinq-navy"
+                      : "bg-white text-trinq-navy shadow-[var(--shadow-xs)]"
+                  }`}
                 >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-
-                <div className="relative flex flex-1 flex-col items-center text-center">
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-trinq-accent to-trinq-accent-light shadow-lg shadow-trinq-accent/15">
-                    <step.icon className="h-8 w-8 text-white" strokeWidth={1.8} />
-                  </div>
-                  <h3 className="mt-6 text-lg font-semibold text-trinq-navy" style={{ letterSpacing: "-0.02em" }}>
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 flex-1 text-[#1E293B]/90" style={{ lineHeight: 1.6 }}>
-                    {step.desc}
-                  </p>
+                  <s.icon size={21} strokeWidth={1.9} />
+                  {/* adım numarası — rozetin köşesinde, sırayı okunur kılar */}
+                  <span
+                    aria-hidden
+                    className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-trinq-navy text-[10px] font-bold text-trinq-cream"
+                  >
+                    {i + 1}
+                  </span>
                 </div>
-              </motion.div>
-            </motion.div>
-          ))}
+                <div>
+                  <h3 className="text-base font-bold tracking-tight text-trinq-navy sm:text-lg">
+                    {s.title}
+                  </h3>
+                  <p className="t-body mt-1 text-trinq-muted">{s.desc}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </Stagger>
+
+          <Reveal variant="up" delay={0.1} className="mt-10">
+            <button
+              type="button"
+              onClick={openBusinessLeadModal}
+              className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-trinq-navy px-8 text-[15px] font-bold text-trinq-cream shadow-[0_16px_40px_-20px_rgba(17,57,46,0.9)] transition-colors hover:bg-trinq-navy-deep sm:w-auto"
+            >
+              İşletmeni trinQ&apos;ya ekle
+            </button>
+          </Reveal>
+        </div>
+
+        {/* ---------------- Gerçek ekranlar ---------------- */}
+        <motion.div
+          className="relative"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div
+            aria-hidden
+            className="sd-parallax pointer-events-none absolute -inset-3 rounded-[34px] bg-white/70 blur-2xl sm:-inset-6"
+            style={{ "--sd-from": "30px", "--sd-to": "-30px" } as React.CSSProperties}
+          />
+
+          {/* işletme paneli — gerçek ekran görüntüsü */}
+          <figure className="relative">
+            <div className="overflow-hidden rounded-[22px] border border-trinq-line bg-white shadow-[var(--shadow-xl)] sm:rounded-[26px]">
+              <img
+                src="/trinq-isletme-panel-gercek.png"
+                alt="trinQ işletme paneli: kampanya listesi, müşteri ve işlem özetleri"
+                className="sd-zoom h-auto w-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            {/*
+              Sola hizalı: telefon mockup'ı sağ alt köşeden panelin üzerine
+              biniyor, ortalanmış bir açıklama telefonun altında kalıyordu.
+            */}
+            <figcaption className="mt-3 text-[13px] font-medium text-trinq-muted">
+              İşletme panelinden gerçek bir görünüm
+            </figcaption>
+          </figure>
+
+          {/* müşterinin telefonu — paneli hafifçe örtecek şekilde */}
+          <div className="relative mx-auto -mt-6 w-[150px] sm:-mt-14 sm:ml-auto sm:mr-2 sm:w-[190px] lg:-mt-20 lg:w-[205px]">
+            <Reveal variant="up" delay={0.2}>
+              <PhoneFrame className="w-full">
+                <img
+                  src="/app-kampanyalar-liste.webp"
+                  alt="trinQ uygulamasında işletmenin aktif kampanyaları"
+                  className="h-full w-full object-cover object-center"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </PhoneFrame>
+            </Reveal>
+          </div>
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 }

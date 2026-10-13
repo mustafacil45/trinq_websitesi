@@ -1,8 +1,15 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
 import { Star, Quote } from "lucide-react";
+import { Section, SectionHeading } from "./ui/Section";
+import { Stagger, StaggerItem } from "./ui/Reveal";
+
+/**
+ * ⚠️ Bu referanslar gerçek müşteri yorumu değilse yayında tutmak hem güven
+ * hem de reklam mevzuatı açısından risklidir. Gerçekleriyle değiştirin ya da
+ * aşağıdaki sabiti `false` yapıp bölümü gizleyin.
+ */
+export const SHOW_TESTIMONIALS = true;
 
 const TESTIMONIALS = [
   {
@@ -10,35 +17,35 @@ const TESTIMONIALS = [
     role: "Kafe Sahibi",
     business: "Brew & Bean Coffee",
     rating: 5,
-    text: "trinQ'ye geçtiğimiz günden beri müşterilerimizin geri dönüş oranı %40 arttı. Fiziksel damga kartlarından kurtulduk, her şey dijital ve kusursuz.",
+    text: "trinQ'ye geçtiğimiz günden beri müşterilerimizin geri dönüş oranı arttı. Fiziksel damga kartlarından kurtulduk, her şey dijital.",
   },
   {
     name: "Ayşe T.",
     role: "İşletme Müdürü",
     business: "Lezzet Durağı Restoran",
     rating: 5,
-    text: "Panel üzerinden kampanya oluşturmak inanılmaz kolay. Öğrenci kampanyalarımız sayesinde öğle saatlerinde doluluk oranımız ikiye katlandı.",
+    text: "Panel üzerinden kampanya oluşturmak inanılmaz kolay. Öğrenci kampanyalarımız sayesinde öğle saatlerinde doluluk belirgin şekilde arttı.",
   },
   {
     name: "Can D.",
     role: "Fırın Sahibi",
     business: "Simit & Kahve",
     rating: 4,
-    text: "trinQ'nin analitik paneli sayesinde en çok satan ürünlerimi ve müşteri alışkanlıklarımı net görüyorum. Veri odaklı kararlar almaya başladım.",
+    text: "Analitik paneli sayesinde en çok satan ürünlerimi ve müşteri alışkanlıklarımı net görüyorum. Veri odaklı kararlar almaya başladım.",
   },
 ];
 
 function StarRating({ rating }: { rating: number }) {
   return (
-    <div className="flex gap-0.5">
-      {[...Array(5)].map((_, i) => (
+    <div className="flex gap-0.5" aria-label={`${rating} / 5 puan`}>
+      {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          size={16}
+          size={15}
           className={
             i < rating
-              ? "fill-trinq-accent text-trinq-accent"
-              : "fill-gray-200 text-gray-200"
+              ? "fill-trinq-gold text-trinq-gold"
+              : "fill-trinq-navy/10 text-trinq-navy/10"
           }
         />
       ))}
@@ -47,65 +54,42 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function TestimonialsSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  if (!SHOW_TESTIMONIALS) return null;
 
   return (
-    <section ref={ref} className="bg-white py-20 sm:py-24 lg:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="mb-14 text-center"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.5 }}
-        >
-          <h2 className="text-3xl font-bold tracking-tight text-trinq-navy sm:text-4xl">
-            İşletmeler Ne Diyor?
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-trinq-muted/80">
-            trinQ kullanan işletme sahiplerinin deneyimlerine göz atın.
-          </p>
-        </motion.div>
+    <Section tone="paper">
+      <SectionHeading
+        eyebrow="Referanslar"
+        title="İşletmeler ne diyor?"
+        subtitle="trinQ kullanan işletme sahiplerinin deneyimleri."
+      />
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {TESTIMONIALS.map((t, i) => (
-            <motion.div
-              key={t.name}
-              className="group relative flex flex-col rounded-[24px] border border-gray-100 bg-[#FAFBFC] p-6 shadow-sm transition-all hover:border-trinq-accent/20 hover:shadow-lg sm:p-8"
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              transition={{ delay: i * 0.15, duration: 0.5 }}
-            >
-              {/* Tırnak ikonu */}
-              <Quote
-                size={32}
-                className="mb-4 text-trinq-accent/20 transition-colors group-hover:text-trinq-accent/40"
-              />
-
-              {/* Yıldızlar */}
-              <StarRating rating={t.rating} />
-
-              {/* Yorum */}
-              <p className="mt-4 flex-1 text-[15px] leading-relaxed text-trinq-muted/90">
-                &ldquo;{t.text}&rdquo;
-              </p>
-
-              {/* Kullanıcı bilgisi */}
-              <div className="mt-6 flex items-center gap-3 border-t border-gray-100 pt-5">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-trinq-accent/10 text-sm font-bold text-trinq-accent">
-                  {t.name.charAt(0)}
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-trinq-navy">{t.name}</p>
-                  <p className="text-xs text-trinq-muted/70">
-                    {t.role} · {t.business}
-                  </p>
-                </div>
+      <Stagger className="mt-12 grid gap-4 sm:mt-16 sm:gap-5 md:grid-cols-3" gap={0.1}>
+        {TESTIMONIALS.map((t) => (
+          <StaggerItem key={t.name}>
+            <figure className="card card-hover flex h-full flex-col p-6 sm:p-7">
+              <Quote size={26} className="text-trinq-navy/15" />
+              <div className="mt-4">
+                <StarRating rating={t.rating} />
               </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
+              <blockquote className="t-body mt-4 flex-1 text-trinq-muted">
+                &ldquo;{t.text}&rdquo;
+              </blockquote>
+              <figcaption className="mt-6 flex items-center gap-3 border-t border-trinq-line pt-5">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-trinq-navy text-sm font-bold text-trinq-cream">
+                  {t.name.charAt(0)}
+                </span>
+                <span>
+                  <span className="block text-sm font-bold text-trinq-navy">{t.name}</span>
+                  <span className="block text-xs text-trinq-muted/80">
+                    {t.role} · {t.business}
+                  </span>
+                </span>
+              </figcaption>
+            </figure>
+          </StaggerItem>
+        ))}
+      </Stagger>
+    </Section>
   );
 }
